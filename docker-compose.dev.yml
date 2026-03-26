@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: web-inventory-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: inventory
+      POSTGRES_USER: inventory
+      POSTGRES_PASSWORD: inventory
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inventory -d inventory"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/nuxt/Dockerfile
+    container_name: web-inventory-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    working_dir: /app
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://inventory:inventory@postgres:5432/inventory?schema=public
+      NUXT_HOST: 0.0.0.0
+      NUXT_PORT: 3000
+    ports:
+      - "3000:3000"
+      - "24678:24678"
+    volumes:
+      - ./:/app
+      - node_modules_cache:/app/node_modules
+    command:
+      [
+        "sh",
+        "-lc",
+        "npm install && npx prisma generate && (npm run dev:nuxt || npm run dev || (echo 'Projeto Nuxt 4 ainda nao foi inicializado nesta etapa.' && tail -f /dev/null))"
+      ]
+
+volumes:
+  postgres_data:
+  node_modules_cache:

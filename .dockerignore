@@ -1,0 +1,11 @@
+node_modules
+.nuxt
+.output
+data/inventory.db
+data/*.db-wal
+data/*.db-shm
+npm-debug.log
+Dockerfile
+docker-compose*.yml
+coverage
+.git
