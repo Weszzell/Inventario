@@ -1280,3 +1280,67 @@ a {
     grid-template-columns: 1fr;
   }
 }
+.inventory-ux-summary,
+.access-panel-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.empty-state-copy {
+  padding: 14px 16px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 16px;
+  background: rgba(237, 244, 255, 0.45);
+}
+
+.data-toolbar {
+  position: sticky;
+  top: 14px;
+  z-index: 5;
+  backdrop-filter: blur(12px);
+}
+
+.access-users-surface,
+.audit-surface,
+.access-backup-surface,
+.access-create-user-surface,
+.access-password-surface {
+  gap: 16px;
+}
+
+.audit-log-card,
+.access-user-card,
+.backup-card-inline,
+.backup-preview-card,
+.advanced-filter-card,
+.preview-info-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.audit-log-card:hover,
+.access-user-card:hover,
+.backup-card-inline:hover,
+.preview-info-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(28, 63, 125, 0.08);
+  border-color: rgba(47, 111, 228, 0.22);
+}
+
+.inventory-table-next tbody tr:hover td {
+  background: #f4f8ff;
+}
+
+.inventory-table-next tbody tr:hover td:first-child {
+  background: #eef4ff;
+}
+
+.record-accordion {
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.record-accordion:hover {
+  border-color: rgba(47, 111, 228, 0.22);
+  box-shadow: 0 10px 24px rgba(28, 63, 125, 0.08);
+}

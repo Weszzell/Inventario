@@ -17,3 +17,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+backups/*.dump
+backups/*.json
+!backups/.gitkeep

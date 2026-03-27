@@ -18,6 +18,7 @@ services:
       context: .
       dockerfile: docker/nuxt/Dockerfile
     container_name: web-inventory-app-prod
+    init: true
     restart: unless-stopped
     depends_on:
       postgres:
@@ -26,10 +27,12 @@ services:
       - .env.production
     environment:
       NODE_ENV: production
+    security_opt:
+      - no-new-privileges:true
     ports:
       - "3001:3000"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/system/status >/dev/null || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/system/health >/dev/null || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 8

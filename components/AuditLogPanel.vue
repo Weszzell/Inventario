@@ -55,6 +55,12 @@ function formatAction(value: string) {
     <p v-else-if="!sessionUser" class="surface-copy">Entre no sistema para visualizar esta area.</p>
     <p v-else-if="!isAdmin" class="surface-copy">Somente administradores podem consultar o historico completo.</p>
     <template v-else>
+      <div class="access-panel-summary">
+        <span class="header-chip">{{ filteredLogs.length }} evento(s) no recorte</span>
+        <span class="header-chip">{{ actionOptions.length - 1 }} acao(oes)</span>
+        <span class="header-chip">{{ targetOptions.length - 1 }} alvo(s)</span>
+      </div>
+
       <div class="audit-toolbar">
         <label class="field-block access-toolbar-search">
           <span>Buscar no historico</span>
@@ -90,6 +96,10 @@ function formatAction(value: string) {
           <p class="surface-copy compact-copy">{{ formatDate(log.createdAt) }}</p>
         </article>
       </div>
+
+      <p v-if="!filteredLogs.length" class="surface-copy empty-state-copy">
+        Nenhum evento encontrado com o recorte atual.
+      </p>
     </template>
   </section>
 </template>

@@ -39,6 +39,9 @@ const filteredUsers = computed(() => {
   });
 });
 
+const activeUsersCount = computed(() => filteredUsers.value.filter((user) => user.active).length);
+const inactiveUsersCount = computed(() => filteredUsers.value.filter((user) => !user.active).length);
+
 function toggleResetPanel(userId: number) {
   resetOpenUserId.value = resetOpenUserId.value === userId ? null : userId;
 }
@@ -67,6 +70,12 @@ function submitReset(userId: number) {
     <p v-else-if="!sessionUser" class="surface-copy">Entre no sistema para visualizar esta area.</p>
     <p v-else-if="!isAdmin" class="surface-copy">Seu perfil atual nao tem permissao para listar todos os usuarios.</p>
     <template v-else>
+      <div class="access-panel-summary">
+        <span class="header-chip">{{ filteredUsers.length }} usuario(s) no recorte</span>
+        <span class="header-chip">{{ activeUsersCount }} ativo(s)</span>
+        <span class="header-chip">{{ inactiveUsersCount }} bloqueado(s)</span>
+      </div>
+
       <div class="access-users-toolbar">
         <label class="field-block access-toolbar-search">
           <span>Buscar usuario</span>
@@ -139,6 +148,10 @@ function submitReset(userId: number) {
           </div>
         </article>
       </div>
+
+      <p v-if="!filteredUsers.length" class="surface-copy empty-state-copy">
+        Nenhum usuario encontrado com os filtros atuais.
+      </p>
     </template>
   </section>
 </template>

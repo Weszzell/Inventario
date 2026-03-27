@@ -1154,3 +1154,77 @@ Fluxo recomendado daqui para frente:
 - banco novo: `docker compose -f docker-compose.prod.yml exec app sh -lc "npx prisma migrate deploy"`
 - carga inicial opcional: `docker compose -f docker-compose.prod.yml exec app sh -lc "node prisma/seed.mjs"`
 - bancos antigos que ja foram criados via `db push`: usar `prisma migrate resolve --applied` para baselinar antes de seguir com novas migrations
+
+### 2026-03-27 - Endurecimento do ambiente de producao
+
+Etapas concluidas nesta fase:
+
+- evolucao de [nuxt.config.ts](c:\Projeto\nuxt.config.ts) com `SESSION_DOMAIN`, `STRICT_ENV_VALIDATION` e `STATUS_PUBLIC_DETAILS`
+- endurecimento do cookie de sessao em [auth.ts](c:\Projeto\server\utils\auth.ts) com suporte a `domain` e reforco automatico de `secure` quando `sameSite=none`
+- criacao do endpoint minimo [health.get.ts](c:\Projeto\server\api\system\health.get.ts) para healthcheck publico sem expor detalhes do banco
+- evolucao de [status.get.ts](c:\Projeto\server\api\system\status.get.ts) para esconder `stats`, `meta` e erros detalhados em producao para usuarios nao administradores
+- criacao do plugin [runtime-validation.ts](c:\Projeto\server\plugins\runtime-validation.ts) para alertar ou bloquear placeholders inseguros em producao
+- endurecimento de [docker-compose.prod.yml](c:\Projeto\docker-compose.prod.yml) com `init: true`, `no-new-privileges` e healthcheck apontando para `/api/system/health`
+- atualizacao de [.env.production.example](c:\Projeto\.env.production.example) com cookie `__Host-`, `SESSION_SAME_SITE=strict` e novas variaveis de validacao
+
+Resultado:
+
+- a aplicacao passa a expor um healthcheck publico mais seguro
+- o endpoint de status fica mais discreto em producao para quem nao esta autenticado como admin
+- o ambiente de producao ganha validacao explicita contra placeholders e configuracoes frageis
+- o compose produtivo fica um pouco mais endurecido sem alterar o fluxo principal de deploy
+
+### 2026-03-27 - Monitoramento basico
+
+Etapas concluidas nesta fase:
+
+- criacao do coletor em [monitoring.ts](c:\Projeto\server\utils\monitoring.ts) com contadores de requisicoes, erros, lentidao e uso de memoria
+- criacao do plugin [request-monitoring.ts](c:\Projeto\server\plugins\request-monitoring.ts) para medir duracao de requests e registrar lentidao/erros no log do servidor
+- criacao do endpoint protegido [metrics.get.ts](c:\Projeto\server\api\system\metrics.get.ts) para administradores consultarem metricas internas do processo
+- atualizacao de [nuxt.config.ts](c:\Projeto\nuxt.config.ts) com `MONITORING_LOG_REQUESTS` e `MONITORING_SLOW_REQUEST_MS`
+- atualizacao de [.env.example](c:\Projeto\.env.example) e [.env.production.example](c:\Projeto\.env.production.example) com defaults de monitoramento
+
+Resultado:
+
+- o sistema passa a medir volume de requisicoes, erros e requests lentas sem depender de servico externo
+- administradores ganham uma rota protegida para inspecionar saude operacional do processo
+- o servidor consegue registrar automaticamente requests lentas ou com erro nos logs de producao
+
+### 2026-03-27 - Backup automatizado no host
+
+Etapas concluidas nesta fase:
+
+- criacao da pasta [backups](c:\Projeto\backups) para armazenar dumps e metadados fora do fluxo normal da aplicacao
+- criacao do script [backup_prod.ps1](c:\Projeto\scripts\backup_prod.ps1) para gerar dump `pg_dump -Fc` do PostgreSQL de producao no host
+- criacao do script [restore_prod.ps1](c:\Projeto\scripts\restore_prod.ps1) para restaurar um dump no banco produtivo com `pg_restore`
+- criacao do script [cleanup_backups.ps1](c:\Projeto\scripts\cleanup_backups.ps1) para aplicar retencao por dias nos arquivos antigos
+- atualizacao de [package.json](c:\Projeto\package.json) com os comandos `backup:prod`, `backup:restore` e `backup:cleanup`
+- atualizacao de [\.gitignore](c:\Projeto\.gitignore) para ignorar dumps e metadados reais mantendo apenas [backups\.gitkeep](c:\Projeto\backups\.gitkeep)
+
+Resultado:
+
+- o projeto passa a ter uma rotina previsivel de backup fisico do banco em nivel de host
+- o restore deixa de depender da interface e pode ser operado diretamente pelo terminal
+- o cleanup permite manter uma retencao simples sem acumular arquivos antigos indefinidamente
+- validacao real concluida com a criacao do dump `web-inventory-prod-20260327-091533.dump`
+
+Comandos principais:
+
+- criar backup: `npm run backup:prod`
+- limpar backups antigos: `npm run backup:cleanup`
+- restaurar backup: `powershell -ExecutionPolicy Bypass -File .\scripts\restore_prod.ps1 -BackupFile .\backups\NOME_DO_ARQUIVO.dump`
+
+### 2026-03-27 - Polimento final de UX
+
+Etapas concluidas nesta fase:
+
+- evolucao de [InventoryRecordList.vue](c:\Projeto\components\InventoryRecordList.vue) com faixa-resumo de uso, estados vazios mais claros e feedback visual melhor para o recorte atual da base
+- evolucao de [AccessUsersPanel.vue](c:\Projeto\components\AccessUsersPanel.vue) com resumo do recorte atual de usuarios ativos e bloqueados
+- evolucao de [AuditLogPanel.vue](c:\Projeto\components\AuditLogPanel.vue) com resumo do recorte atual do historico e estado vazio mais claro
+- refinamento visual complementar em [main.css](c:\Projeto\assets\css\main.css) com toolbar fixa, hover states, faixas-resumo e leitura mais confortavel da tabela e dos cards
+
+Resultado:
+
+- a tabela ativa ficou mais orientada ao contexto atual de uso
+- usuarios e historico passam a mostrar rapidamente o recorte visivel antes mesmo de ler os cards individualmente
+- a leitura em inventario e acessos fica mais fluida para uso continuo e pesquisa diaria

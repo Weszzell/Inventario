@@ -16,6 +16,11 @@ export default defineNuxtConfig({
     sessionMaxAge: Number(process.env.SESSION_MAX_AGE || 60 * 60 * 12),
     sessionSecure: process.env.SESSION_SECURE === "true",
     sessionSameSite: process.env.SESSION_SAME_SITE || "lax",
+    sessionDomain: process.env.SESSION_DOMAIN || "",
+    strictEnvValidation: process.env.STRICT_ENV_VALIDATION === "true",
+    statusPublicDetails: process.env.STATUS_PUBLIC_DETAILS === "true",
+    monitoringLogRequests: process.env.MONITORING_LOG_REQUESTS === "true",
+    monitoringSlowRequestMs: Number(process.env.MONITORING_SLOW_REQUEST_MS || 1000),
     public: {
       appName: process.env.NUXT_PUBLIC_APP_NAME || "Web Inventory",
       appEnv: process.env.NUXT_PUBLIC_APP_ENV || process.env.NODE_ENV || "development",

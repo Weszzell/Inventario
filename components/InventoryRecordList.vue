@@ -117,7 +117,18 @@ const tableShellClass = computed(() => [
   `table-density-${tableDensity.value}`,
   `table-width-${columnWidthMode.value}`,
 ]);
-
+const activeFilterCount = computed(() =>
+  Object.values(columnFilters.value).filter((filter) => {
+    const mode = filter?.mode ?? "contains";
+    const value = String(filter?.value ?? "").trim();
+    return mode === "empty" || mode === "filled" || value.length > 0;
+  }).length,
+);
+const importModeLabel = computed(() => (importMode.value === "append" ? "Acrescentar" : "Substituir"));
+const resultSummary = computed(() => {
+  if (!totalItems.value) return "Sem registros para a combinacao atual.";
+  return `Mostrando ${pageStart.value}-${pageEnd.value} de ${totalItems.value} registro(s).`;
+});
 const hasActiveColumnFilters = computed(() =>
   Object.values(columnFilters.value).some((filter) => {
     const mode = filter?.mode ?? "contains";
@@ -583,6 +594,13 @@ async function exportCurrentViewToExcel() {
       <p v-else-if="activeDataset && !activeDataset.records.length" class="surface-copy">Nenhum registro encontrado para esta busca.</p>
 
       <template v-else-if="activeDataset">
+        <div class="inventory-ux-summary">
+          <span class="header-chip">{{ visibleTableHeaders.length }} coluna(s) visiveis</span>
+          <span class="header-chip">{{ activeFilterCount }} filtro(s) ativo(s)</span>
+          <span class="header-chip">Importacao em modo {{ importModeLabel }}</span>
+          <span class="header-chip">{{ resultSummary }}</span>
+        </div>
+
         <div class="column-filters-surface preferences-surface">
           <div class="column-filters-head">
             <div>
@@ -813,6 +831,10 @@ async function exportCurrentViewToExcel() {
             @update-field="emit('update-field', $event)"
             @delete-record="emit('delete-record', $event)"
           />
+
+          <p v-if="!pagedExpandableRows.length" class="surface-copy empty-state-copy">
+            Nenhum registro encontrado nesta pagina com os filtros atuais.
+          </p>
         </div>
 
         <div v-else class="data-table-shell">
@@ -849,8 +871,16 @@ async function exportCurrentViewToExcel() {
               </tr>
             </tbody>
           </table>
+
+          <p v-if="!pagedTableRows.length" class="surface-copy empty-state-copy">
+            Nenhum registro encontrado nesta pagina com os filtros atuais.
+          </p>
         </div>
       </template>
     </div>
   </section>
 </template>
+
+
+
+

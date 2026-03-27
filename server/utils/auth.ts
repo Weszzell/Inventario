@@ -40,17 +40,27 @@ function toSessionUser(user: User): SessionUser {
   };
 }
 
+function getBooleanEnv(value: string | undefined, fallback: boolean) {
+  if (typeof value !== "string" || !value.length) return fallback;
+  return value.toLowerCase() === "true";
+}
+
 function getSessionConfig(event: H3Event) {
   const config = useRuntimeConfig(event);
-  const sameSite = ["lax", "strict", "none"].includes(String(config.sessionSameSite || "").toLowerCase())
-    ? String(config.sessionSameSite).toLowerCase()
+  const sameSiteSource = process.env.SESSION_SAME_SITE || String(config.sessionSameSite || "lax");
+  const sameSite = ["lax", "strict", "none"].includes(String(sameSiteSource || "").toLowerCase())
+    ? String(sameSiteSource).toLowerCase()
     : "lax";
+  const domain = String(process.env.SESSION_DOMAIN || config.sessionDomain || "").trim();
+  const secure = getBooleanEnv(process.env.SESSION_SECURE, config.sessionSecure === true) || sameSite === "none";
+  const maxAge = Number(process.env.SESSION_MAX_AGE || config.sessionMaxAge || 60 * 60 * 12);
 
   return {
-    cookieName: String(config.sessionCookieName || "web_inventory_session"),
-    maxAge: Number(config.sessionMaxAge || 60 * 60 * 12),
-    secure: config.sessionSecure === true,
+    cookieName: String(process.env.SESSION_COOKIE_NAME || config.sessionCookieName || "web_inventory_session"),
+    maxAge,
+    secure,
     sameSite: sameSite as "lax" | "strict" | "none",
+    domain: domain || undefined,
   };
 }
 
@@ -113,6 +123,7 @@ export async function createSession(event: H3Event, userId: number) {
     path: "/",
     secure: sessionConfig.secure,
     maxAge: sessionConfig.maxAge,
+    domain: sessionConfig.domain,
   });
 }
 
@@ -124,7 +135,12 @@ export async function destroySession(event: H3Event) {
       where: { token },
     });
   }
-  deleteCookie(event, sessionConfig.cookieName, { path: "/" });
+  deleteCookie(event, sessionConfig.cookieName, {
+    path: "/",
+    domain: sessionConfig.domain,
+    sameSite: sessionConfig.sameSite,
+    secure: sessionConfig.secure,
+  });
 }
 
 export async function getSessionUser(event: H3Event) {
@@ -143,7 +159,12 @@ export async function getSessionUser(event: H3Event) {
     await prisma.userSession.delete({
       where: { token },
     });
-    deleteCookie(event, sessionConfig.cookieName, { path: "/" });
+    deleteCookie(event, sessionConfig.cookieName, {
+      path: "/",
+      domain: sessionConfig.domain,
+      sameSite: sessionConfig.sameSite,
+      secure: sessionConfig.secure,
+    });
     return null;
   }
 
