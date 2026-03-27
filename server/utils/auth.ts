@@ -1,7 +1,7 @@
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import type { H3Event } from "h3";
 import { useRuntimeConfig } from "#imports";
-import { createError, deleteCookie, getCookie, readBody, setCookie } from "h3";
+import { createError, deleteCookie, getCookie, getRequestURL, readBody, setCookie } from "h3";
 import type { User, UserRole } from "@prisma/client";
 import { prisma } from "./prisma";
 
@@ -45,6 +45,11 @@ function getBooleanEnv(value: string | undefined, fallback: boolean) {
   return value.toLowerCase() === "true";
 }
 
+function isLocalHostname(hostname: string) {
+  const normalized = String(hostname || "").trim().toLowerCase();
+  return normalized === "localhost" || normalized === "127.0.0.1" || normalized === "::1";
+}
+
 function getSessionConfig(event: H3Event) {
   const config = useRuntimeConfig(event);
   const sameSiteSource = process.env.SESSION_SAME_SITE || String(config.sessionSameSite || "lax");
@@ -52,7 +57,14 @@ function getSessionConfig(event: H3Event) {
     ? String(sameSiteSource).toLowerCase()
     : "lax";
   const domain = String(process.env.SESSION_DOMAIN || config.sessionDomain || "").trim();
-  const secure = getBooleanEnv(process.env.SESSION_SECURE, config.sessionSecure === true) || sameSite === "none";
+  const configuredSecure = getBooleanEnv(process.env.SESSION_SECURE, config.sessionSecure === true);
+  const allowInsecureLocalhost = getBooleanEnv(
+    process.env.ALLOW_INSECURE_LOCALHOST_SESSION,
+    Boolean(config.allowInsecureLocalhostSession),
+  );
+  const requestHostname = getRequestURL(event).hostname;
+  const secure =
+    (configuredSecure && !(allowInsecureLocalhost && isLocalHostname(requestHostname))) || sameSite === "none";
   const maxAge = Number(process.env.SESSION_MAX_AGE || config.sessionMaxAge || 60 * 60 * 12);
 
   return {

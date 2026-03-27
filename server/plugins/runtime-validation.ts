@@ -9,6 +9,7 @@ export default defineNitroPlugin(() => {
     const databaseUrl = String(process.env.DATABASE_URL || config.databaseUrl || "");
     const cookieName = String(process.env.SESSION_COOKIE_NAME || config.sessionCookieName || "");
     const sessionSecure = String(process.env.SESSION_SECURE || String(config.sessionSecure)).toLowerCase() === "true";
+    const allowInsecureLocalhost = String(process.env.ALLOW_INSECURE_LOCALHOST_SESSION || String(config.allowInsecureLocalhostSession || false)).toLowerCase() === "true";
     const sameSite = String(process.env.SESSION_SAME_SITE || config.sessionSameSite || "").toLowerCase();
 
     if (!databaseUrl) {
@@ -23,8 +24,12 @@ export default defineNitroPlugin(() => {
       warnings.push("POSTGRES_PASSWORD ainda usa valor placeholder.");
     }
 
-    if (!sessionSecure) {
+    if (!sessionSecure && !allowInsecureLocalhost) {
       warnings.push("SESSION_SECURE esta desativado em producao.");
+    }
+
+    if (allowInsecureLocalhost && sameSite === "none") {
+      warnings.push("ALLOW_INSECURE_LOCALHOST_SESSION nao pode ser usado com SESSION_SAME_SITE=none.");
     }
 
     if (sameSite === "none" && !sessionSecure) {

@@ -1271,3 +1271,18 @@ Comandos principais:
 - registrar a tarefa: `npm run backup:schedule`
 - remover a tarefa: `npm run backup:unschedule`
 - consultar a tarefa: `schtasks /Query /TN WebInventoryDailyBackup /V /FO LIST`
+
+### 2026-03-27 - Checklist final de operacao com sessao local corrigida
+
+Etapas concluidas nesta fase:
+
+- ajuste em [auth.ts](c:\Projeto\server\utils\auth.ts) para permitir sessao sem `secure` apenas em `localhost` quando `ALLOW_INSECURE_LOCALHOST_SESSION=true`
+- exposicao do novo flag em [nuxt.config.ts](c:\Projeto\nuxt.config.ts) e documentacao em [\.env.production.example](c:\Projeto\.env.production.example)
+- ajuste de validacao em [runtime-validation.ts](c:\Projeto\server\plugins\runtime-validation.ts) para aceitar a excecao controlada de ambiente local
+- ativacao de `ALLOW_INSECURE_LOCALHOST_SESSION=true` somente no [\.env.production](c:\Projeto\.env.production) local para permitir validar a sessao no `http://localhost:3001`
+
+Resultado:
+
+- o ambiente produtivo local passa a manter sessao corretamente em `http://localhost:3001`
+- a excecao fica restrita ao `localhost` e depende de flag explicita
+- o comportamento seguro continua preservado para producao real com HTTPS

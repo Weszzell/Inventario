@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     sessionSecure: process.env.SESSION_SECURE === "true",
     sessionSameSite: process.env.SESSION_SAME_SITE || "lax",
     sessionDomain: process.env.SESSION_DOMAIN || "",
+    allowInsecureLocalhostSession: process.env.ALLOW_INSECURE_LOCALHOST_SESSION === "true",
     strictEnvValidation: process.env.STRICT_ENV_VALIDATION === "true",
     statusPublicDetails: process.env.STATUS_PUBLIC_DETAILS === "true",
     monitoringLogRequests: process.env.MONITORING_LOG_REQUESTS === "true",
