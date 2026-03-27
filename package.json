@@ -17,6 +17,9 @@
     "backup:prod": "powershell -ExecutionPolicy Bypass -File .\\scripts\\backup_prod.ps1",
     "backup:cleanup": "powershell -ExecutionPolicy Bypass -File .\\scripts\\cleanup_backups.ps1",
     "backup:restore": "powershell -ExecutionPolicy Bypass -File .\\scripts\\restore_prod.ps1",
+    "backup:run-scheduled": "powershell -ExecutionPolicy Bypass -File .\\scripts\\run_scheduled_backup.ps1",
+    "backup:schedule": "powershell -ExecutionPolicy Bypass -File .\\scripts\\register_backup_task.ps1",
+    "backup:unschedule": "powershell -ExecutionPolicy Bypass -File .\\scripts\\unregister_backup_task.ps1",
     "legacy:start": "node legacy/server.mjs"
   },
   "dependencies": {

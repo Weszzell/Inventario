@@ -20,4 +20,6 @@ pnpm-debug.log*
 
 backups/*.dump
 backups/*.json
+backups/logs/*.log
 !backups/.gitkeep
+!backups/logs/.gitkeep

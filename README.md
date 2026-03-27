@@ -1228,3 +1228,46 @@ Resultado:
 - a tabela ativa ficou mais orientada ao contexto atual de uso
 - usuarios e historico passam a mostrar rapidamente o recorte visivel antes mesmo de ler os cards individualmente
 - a leitura em inventario e acessos fica mais fluida para uso continuo e pesquisa diaria
+
+### 2026-03-27 - Credenciais locais de producao rotacionadas
+
+Etapas concluidas nesta fase:
+
+- substituicao dos placeholders em [\.env.production](c:\Projeto\.env.production) por credencial forte local
+- rotacao real da senha do usuario `inventory` no PostgreSQL de producao
+- ativacao de `STRICT_ENV_VALIDATION=true` no ambiente produtivo local
+- recriacao dos containers de producao para consumir as novas credenciais
+
+Resultado:
+
+- o ambiente local de producao deixa de usar `change-this-password`
+- a validacao estrita de ambiente passa a bloquear configuracoes inseguras na subida
+- a aplicacao continuou saudavel apos a rotacao, com `health` respondendo `ok: true`
+
+Observacao:
+
+- os valores reais permanecem somente em [\.env.production](c:\Projeto\.env.production), que continua fora do Git
+
+### 2026-03-27 - Rotina agendada de backup no Windows
+
+Etapas concluidas nesta fase:
+
+- criacao do script [run_scheduled_backup.ps1](c:\Projeto\scripts\run_scheduled_backup.ps1) para executar `backup + cleanup` em sequencia com log mensal em [backups\logs](c:\Projeto\backups\logs)
+- criacao do script [register_backup_task.ps1](c:\Projeto\scripts\register_backup_task.ps1) para registrar a tarefa diaria no Agendador do Windows via `schtasks`
+- criacao do script [unregister_backup_task.ps1](c:\Projeto\scripts\unregister_backup_task.ps1) para remover a tarefa quando necessario
+- atualizacao de [package.json](c:\Projeto\package.json) com `backup:run-scheduled`, `backup:schedule` e `backup:unschedule`
+- validacao real da rotina completa com execucao manual de [run_scheduled_backup.ps1](c:\Projeto\scripts\run_scheduled_backup.ps1)
+- registro real da tarefa `WebInventoryDailyBackup` para execucao diaria as `02:30`
+
+Resultado:
+
+- o projeto passa a ter backup diario automatico no Windows para o ambiente produtivo local
+- cada execucao gera dump, metadados e log operacional da rotina
+- a tarefa ficou registrada para o usuario atual com proxima execucao em `28/03/2026 02:30:00`
+
+Comandos principais:
+
+- rodar a rotina manualmente: `npm run backup:run-scheduled`
+- registrar a tarefa: `npm run backup:schedule`
+- remover a tarefa: `npm run backup:unschedule`
+- consultar a tarefa: `schtasks /Query /TN WebInventoryDailyBackup /V /FO LIST`
