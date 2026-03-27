@@ -1286,3 +1286,15 @@ Resultado:
 - o ambiente produtivo local passa a manter sessao corretamente em `http://localhost:3001`
 - a excecao fica restrita ao `localhost` e depende de flag explicita
 - o comportamento seguro continua preservado para producao real com HTTPS
+
+### 2026-03-27 - Branch principal alinhada para main
+
+Etapas concluidas nesta fase:
+
+- renomeacao da branch local de `master` para `main`
+- preparacao do repositorio para seguir o padrao atual de branch principal
+
+Resultado:
+
+- o desenvolvimento passa a seguir na branch `main`
+- a branch historica `master` pode ser mantida no remoto ate voce decidir remover ou trocar a branch padrao no GitHub
