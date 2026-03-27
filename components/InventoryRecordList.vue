@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatFieldLabel } from "~/utils/field-label";
+
 type FilterMode = "contains" | "equals" | "empty" | "filled";
 
 type FilterState = {
@@ -93,7 +95,7 @@ const preferenceStorageKey = computed(() => {
 });
 
 const sortOptions = computed(() => {
-  const options = props.tableHeaders.map((field) => ({ value: field, label: field }));
+  const options = props.tableHeaders.map((field) => ({ value: field, label: formatFieldLabel(field) }));
   if (props.activeExpandableConfig) {
     return [{ value: "__identifier", label: "Identificacao" }, ...options];
   }
@@ -101,14 +103,14 @@ const sortOptions = computed(() => {
 });
 
 const filterFields = computed(() => {
-  const items = props.tableHeaders.map((field) => ({ key: field, label: field }));
+  const items = props.tableHeaders.map((field) => ({ key: field, label: formatFieldLabel(field) }));
   if (props.activeExpandableConfig) {
     return [{ key: "__identifier", label: "Identificacao" }, ...items];
   }
   return items;
 });
 
-const columnVisibilityOptions = computed(() => props.tableHeaders.map((field) => ({ key: field, label: field })));
+const columnVisibilityOptions = computed(() => props.tableHeaders.map((field) => ({ key: field, label: formatFieldLabel(field) })));
 const visibleTableHeaders = computed(() => props.tableHeaders.filter((field) => visibleColumns.value.includes(field)));
 const hiddenColumnCount = computed(() => Math.max(0, props.tableHeaders.length - visibleTableHeaders.value.length));
 const existingDatasetFields = computed(() => props.activeDataset?.fields ?? props.tableHeaders);
@@ -731,7 +733,7 @@ async function exportCurrentViewToExcel() {
               <article class="preview-info-card">
                 <p class="metric-label">Colunas reconhecidas</p>
                 <div class="preview-chip-list">
-                  <span v-for="field in importPreview.headers" :key="field" class="header-chip">{{ field }}</span>
+                  <span v-for="field in importPreview.headers" :key="field" class="header-chip">{{ formatFieldLabel(field) }}</span>
                 </div>
               </article>
 
@@ -742,10 +744,10 @@ async function exportCurrentViewToExcel() {
                   <span v-if="importPreview.newFields.length"> e {{ importPreview.newFields.length }} nova(s)</span>
                 </p>
                 <div v-if="importPreview.newFields.length" class="preview-chip-list">
-                  <span v-for="field in importPreview.newFields" :key="field" class="status-tag is-active">Novo: {{ field }}</span>
+                  <span v-for="field in importPreview.newFields" :key="field" class="status-tag is-active">Novo: {{ formatFieldLabel(field) }}</span>
                 </div>
                 <div v-if="importPreview.ignoredColumns.length" class="preview-chip-list">
-                  <span v-for="field in importPreview.ignoredColumns" :key="field" class="status-tag is-inactive">Ignorado: {{ field || 'Sem titulo' }}</span>
+                  <span v-for="field in importPreview.ignoredColumns" :key="field" class="status-tag is-inactive">Ignorado: {{ field ? formatFieldLabel(field) : 'Sem titulo' }}</span>
                 </div>
               </article>
             </div>
@@ -754,7 +756,7 @@ async function exportCurrentViewToExcel() {
               <table class="preview-table">
                 <thead>
                   <tr>
-                    <th v-for="field in importPreview.headers" :key="field">{{ field }}</th>
+                    <th v-for="field in importPreview.headers" :key="field">{{ formatFieldLabel(field) }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -844,7 +846,7 @@ async function exportCurrentViewToExcel() {
                 <th>Acoes</th>
                 <th v-for="field in visibleTableHeaders" :key="field">
                   <button class="table-sort-button" type="button" @click="toggleSort(field)">
-                    <span>{{ field }}</span>
+                    <span>{{ formatFieldLabel(field) }}</span>
                     <span class="sort-indicator" :class="{ active: sortField === field }">
                       {{ sortField === field ? (sortDirection === 'asc' ? 'A-Z' : 'Z-A') : 'A/Z' }}
                     </span>
@@ -864,7 +866,7 @@ async function exportCurrentViewToExcel() {
                     class="table-cell-input"
                     :value="String(record.data[field] ?? '')"
                     type="text"
-                    :placeholder="field"
+                    :placeholder="formatFieldLabel(field)"
                     @change="emit('update-field', { recordId: record.id, field, event: $event })"
                   />
                 </td>

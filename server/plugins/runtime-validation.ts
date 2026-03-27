@@ -36,7 +36,7 @@ export default defineNitroPlugin(() => {
       warnings.push("SESSION_SAME_SITE=none exige SESSION_SECURE=true.");
     }
 
-    if (!cookieName.startsWith("__Host-") && !cookieName.startsWith("__Secure-")) {
+    if (!allowInsecureLocalhost && !cookieName.startsWith("__Host-") && !cookieName.startsWith("__Secure-")) {
       warnings.push("Considere usar prefixo __Host- ou __Secure- no nome do cookie de sessao.");
     }
   }

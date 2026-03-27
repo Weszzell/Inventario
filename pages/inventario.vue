@@ -36,7 +36,7 @@ const {
 const heroChips = computed(() => {
   const items = [
     status.value?.database?.connected ? 'Banco conectado' : 'Conexao pendente',
-    `${status.value?.stats?.records ?? 0} registros`,
+    `${summary.value?.totalRecords ?? status.value?.stats?.records ?? 0} registros`,
   ];
 
   if (summary.value?.generatedAt) {

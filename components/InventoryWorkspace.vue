@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatFieldLabel } from "~/utils/field-label";
+
 const activePanel = ref<"record" | "field">("record");
 
 defineProps<{
@@ -42,8 +44,8 @@ const emit = defineEmits<{
 
           <form class="form-grid-compact" @submit.prevent="emit('create-record')">
             <label v-for="field in tableHeaders" :key="`new-${field}`" class="field-block">
-              <span>{{ field }}</span>
-              <input :value="newRecordForm[field] ?? ''" type="text" :placeholder="`Digite ${field}`" @input="emit('update:newRecordField', { field, value: ($event.target as HTMLInputElement).value })" />
+              <span>{{ formatFieldLabel(field) }}</span>
+              <input :value="newRecordForm[field] ?? ''" type="text" :placeholder="`Digite ${formatFieldLabel(field)}`" @input="emit('update:newRecordField', { field, value: ($event.target as HTMLInputElement).value })" />
             </label>
 
             <div class="form-actions-bar full-width-actions">

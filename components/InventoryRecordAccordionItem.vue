@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatFieldLabel } from "~/utils/field-label";
+
 defineProps<{
   record: { id: number; identifier: string; data: Record<string, unknown> };
   tableHeaders: string[];
@@ -24,12 +26,12 @@ const emit = defineEmits<{
     <div class="record-accordion-body">
       <div class="record-fields-grid">
         <label v-for="field in tableHeaders" :key="`${record.id}-${field}`" class="field-block">
-          <span>{{ field }}</span>
+          <span>{{ formatFieldLabel(field) }}</span>
           <input
             class="table-cell-input"
             :value="String(record.data[field] ?? '')"
             type="text"
-            :placeholder="field"
+            :placeholder="formatFieldLabel(field)"
             @change="emit('update-field', { recordId: record.id, field, event: $event })"
           />
         </label>

@@ -63,12 +63,16 @@ function getSessionConfig(event: H3Event) {
     Boolean(config.allowInsecureLocalhostSession),
   );
   const requestHostname = getRequestURL(event).hostname;
-  const secure =
-    (configuredSecure && !(allowInsecureLocalhost && isLocalHostname(requestHostname))) || sameSite === "none";
+  const insecureLocalhost = allowInsecureLocalhost && isLocalHostname(requestHostname) && sameSite != "none";
+  const secure = (configuredSecure && !insecureLocalhost) || sameSite === "none";
+  const configuredCookieName = String(process.env.SESSION_COOKIE_NAME || config.sessionCookieName || "web_inventory_session");
+  const cookieName = insecureLocalhost
+    ? configuredCookieName.replace(/^__(Host|Secure)-/i, "") || "web_inventory_session"
+    : configuredCookieName;
   const maxAge = Number(process.env.SESSION_MAX_AGE || config.sessionMaxAge || 60 * 60 * 12);
 
   return {
-    cookieName: String(process.env.SESSION_COOKIE_NAME || config.sessionCookieName || "web_inventory_session"),
+    cookieName,
     maxAge,
     secure,
     sameSite: sameSite as "lax" | "strict" | "none",

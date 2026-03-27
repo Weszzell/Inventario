@@ -1279,7 +1279,9 @@ Etapas concluidas nesta fase:
 - ajuste em [auth.ts](c:\Projeto\server\utils\auth.ts) para permitir sessao sem `secure` apenas em `localhost` quando `ALLOW_INSECURE_LOCALHOST_SESSION=true`
 - exposicao do novo flag em [nuxt.config.ts](c:\Projeto\nuxt.config.ts) e documentacao em [\.env.production.example](c:\Projeto\.env.production.example)
 - ajuste de validacao em [runtime-validation.ts](c:\Projeto\server\plugins\runtime-validation.ts) para aceitar a excecao controlada de ambiente local
-- ativacao de `ALLOW_INSECURE_LOCALHOST_SESSION=true` somente no [\.env.production](c:\Projeto\.env.production) local para permitir validar a sessao no `http://localhost:3001`
+
+- ajuste complementar em [inventario.vue](c:\Projeto\pages\inventario.vue) para o topo exibir o total real de registros vindo do resumo, sem depender do `status` publico minimo
+- correção final da validacao em [runtime-validation.ts](c:\Projeto\server\plugins\runtime-validation.ts) para nao bloquear o fallback controlado de cookie local
 
 Resultado:
 
@@ -1298,3 +1300,13 @@ Resultado:
 
 - o desenvolvimento passa a seguir na branch `main`
 - a branch historica `master` pode ser mantida no remoto ate voce decidir remover ou trocar a branch padrao no GitHub
+
+
+### 2026-03-27 - Rotulos de campos padronizados na interface
+
+Etapas concluidas nesta fase:
+
+- criacao de [field-label.ts](c:\Projeto\utils\field-label.ts) para centralizar a formatacao visual dos nomes de campos
+- ajuste em [InventoryWorkspace.vue](c:\Projeto\components\InventoryWorkspace.vue), [InventoryRecordAccordionItem.vue](c:\Projeto\components\InventoryRecordAccordionItem.vue) e [InventoryRecordList.vue](c:\Projeto\components\InventoryRecordList.vue)
+- regra especial para `alocadoPara` ser exibido como `Alocado Para`
+- demais campos agora passam a ser exibidos com a primeira letra maiuscula e separacao melhor de palavras em camelCase
