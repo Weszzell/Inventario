@@ -18,9 +18,14 @@ defineProps<{
       </div>
     </div>
 
-    <div v-if="sessionUser" class="compact-session-card">
-      <strong>{{ sessionUser.displayName }}</strong>
-      <p class="surface-copy compact-copy">{{ sessionUser.username }} - {{ sessionUser.role }} - {{ sessionUser.active ? 'Ativo' : 'Bloqueado' }}</p>
+    <div v-if="sessionUser" class="compact-session-card session-inline-card">
+      <div>
+        <strong>{{ sessionUser.displayName }}</strong>
+        <p class="surface-copy compact-copy">{{ sessionUser.username }} - {{ sessionUser.role }}</p>
+      </div>
+      <span class="status-tag" :class="sessionUser.active ? 'is-active' : 'is-inactive'">
+        {{ sessionUser.active ? 'Ativo' : 'Bloqueado' }}
+      </span>
     </div>
   </section>
 </template>

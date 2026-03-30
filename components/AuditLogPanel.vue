@@ -65,14 +65,16 @@ function formatAction(value: string) {
         </label>
       </div>
 
-      <div class="audit-log-list compact-audit-log-list">
-        <article v-for="log in filteredLogs" :key="log.id" class="audit-log-card compact-audit-log-card">
-          <div class="audit-log-topline">
-            <strong>{{ log.actorName }}</strong>
-            <span class="status-tag is-active">{{ formatAction(log.action) }}</span>
-          </div>
-          <p class="surface-copy compact-copy">{{ log.targetType }}<span v-if="log.targetId"> #{{ log.targetId }}</span> ? {{ formatDate(log.createdAt) }}</p>
-        </article>
+      <div class="audit-log-shell">
+        <div class="audit-log-list compact-audit-log-list">
+          <article v-for="log in filteredLogs" :key="log.id" class="audit-log-card compact-audit-log-card">
+            <div class="audit-log-topline">
+              <strong>{{ log.actorName }}</strong>
+              <span class="status-tag is-active">{{ formatAction(log.action) }}</span>
+            </div>
+            <p class="surface-copy compact-copy">{{ log.targetType }}<span v-if="log.targetId"> #{{ log.targetId }}</span> - {{ formatDate(log.createdAt) }}</p>
+          </article>
+        </div>
       </div>
 
       <p v-if="!filteredLogs.length" class="surface-copy empty-state-copy">

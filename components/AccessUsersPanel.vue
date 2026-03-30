@@ -82,60 +82,62 @@ function submitReset(userId: number) {
         </label>
       </div>
 
-      <div class="access-user-grid">
-        <article v-for="user in filteredUsers" :key="user.id" class="access-user-card stacked-user-card">
-          <div class="access-user-main">
-            <div>
-              <strong>{{ user.displayName }}</strong>
-              <p class="surface-copy compact-copy">{{ user.username }} - {{ user.role }}</p>
+      <div class="access-user-list-shell">
+        <div class="access-user-grid">
+          <article v-for="user in filteredUsers" :key="user.id" class="access-user-card stacked-user-card">
+            <div class="access-user-main">
+              <div>
+                <strong>{{ user.displayName }}</strong>
+                <p class="surface-copy compact-copy">{{ user.username }} - {{ user.role }}</p>
+              </div>
+              <div class="access-user-meta">
+                <span class="status-tag" :class="user.active ? 'is-active' : 'is-inactive'">
+                  {{ user.active ? 'Ativo' : 'Bloqueado' }}
+                </span>
+              </div>
             </div>
-            <div class="access-user-meta">
-              <span class="status-tag" :class="user.active ? 'is-active' : 'is-inactive'">
-                {{ user.active ? 'Ativo' : 'Bloqueado' }}
-              </span>
-            </div>
-          </div>
 
-          <div class="access-user-actions">
-            <label class="field-block field-block-narrow inline-field-block">
-              <span>Perfil</span>
-              <select
-                :value="user.role"
-                :disabled="accessSaving"
-                @change="emit('update-user-role', { userId: user.id, role: ($event.target as HTMLSelectElement).value as AccessRole })"
-              >
-                <option value="EDITOR">Editor</option>
-                <option value="ADMIN">Administrador</option>
-              </select>
-            </label>
+            <div class="access-user-actions">
+              <label class="field-block field-block-narrow inline-field-block">
+                <span>Perfil</span>
+                <select
+                  :value="user.role"
+                  :disabled="accessSaving"
+                  @change="emit('update-user-role', { userId: user.id, role: ($event.target as HTMLSelectElement).value as AccessRole })"
+                >
+                  <option value="EDITOR">Editor</option>
+                  <option value="ADMIN">Administrador</option>
+                </select>
+              </label>
 
-            <button class="secondary-cta" type="button" :disabled="accessSaving || sessionUser.id === user.id" @click="emit('toggle-user', user.id)">
-              {{ user.active ? 'Bloquear' : 'Ativar' }}
-            </button>
+              <button class="secondary-cta" type="button" :disabled="accessSaving || sessionUser.id === user.id" @click="emit('toggle-user', user.id)">
+                {{ user.active ? 'Bloquear' : 'Ativar' }}
+              </button>
 
-            <button class="secondary-cta" type="button" :disabled="accessSaving" @click="toggleResetPanel(user.id)">
-              {{ resetOpenUserId === user.id ? 'Fechar' : 'Senha' }}
-            </button>
-          </div>
-
-          <div v-if="resetOpenUserId === user.id" class="access-reset-panel">
-            <label class="field-block">
-              <span>Nova senha para {{ user.username }}</span>
-              <input
-                :value="passwordDrafts[user.id] ?? ''"
-                type="password"
-                autocomplete="new-password"
-                @input="passwordDrafts = { ...passwordDrafts, [user.id]: ($event.target as HTMLInputElement).value }"
-              />
-            </label>
-
-            <div class="form-actions-bar">
-              <button class="primary-cta" type="button" :disabled="accessSaving || !(passwordDrafts[user.id] ?? '').trim()" @click="submitReset(user.id)">
-                {{ accessSaving ? 'Salvando...' : 'Salvar nova senha' }}
+              <button class="secondary-cta" type="button" :disabled="accessSaving" @click="toggleResetPanel(user.id)">
+                {{ resetOpenUserId === user.id ? 'Fechar' : 'Senha' }}
               </button>
             </div>
-          </div>
-        </article>
+
+            <div v-if="resetOpenUserId === user.id" class="access-reset-panel">
+              <label class="field-block">
+                <span>Nova senha</span>
+                <input
+                  :value="passwordDrafts[user.id] ?? ''"
+                  type="password"
+                  autocomplete="new-password"
+                  @input="passwordDrafts = { ...passwordDrafts, [user.id]: ($event.target as HTMLInputElement).value }"
+                />
+              </label>
+
+              <div class="form-actions-bar">
+                <button class="primary-cta" type="button" :disabled="accessSaving || !(passwordDrafts[user.id] ?? '').trim()" @click="submitReset(user.id)">
+                  {{ accessSaving ? 'Salvando...' : 'Salvar senha' }}
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
       </div>
 
       <p v-if="!filteredUsers.length" class="surface-copy empty-state-copy">

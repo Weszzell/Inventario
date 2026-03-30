@@ -32,7 +32,6 @@ const {
 } = useWebInventory();
 
 const heroChips = computed(() => [
-  status.value?.database?.provider ?? "postgresql",
   `${users.value.length || (status.value?.stats?.users ?? 0)} usuarios`,
   sessionUser.value ? "Sessao ativa" : "Sessao inativa",
 ]);
@@ -69,7 +68,7 @@ onMounted(bootstrap);
     <UiHeroSection
       eyebrow="Acessos"
       title="Controle de acessos"
-      description="Sessao, usuarios e administracao direta do ambiente."
+      description="Gestao direta de usuarios, sessao e backup."
       :chips="heroChips"
       compact
     />

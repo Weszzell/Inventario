@@ -154,19 +154,21 @@ function handleRestoreFileChange(event: Event) {
         </div>
       </div>
 
-      <label class="field-block backup-file-field backup-file-field-full">
-        <span>Arquivo JSON</span>
-        <input type="file" accept="application/json,.json" @change="handleRestoreFileChange" />
-      </label>
+      <div class="backup-rebuilt-stack">
+        <label class="field-block backup-file-field backup-file-field-full">
+          <span>Arquivo JSON</span>
+          <input type="file" accept="application/json,.json" @change="handleRestoreFileChange" />
+        </label>
 
-      <div class="backup-action-row">
-        <button class="secondary-cta" type="button" :disabled="backupPending" @click="emit('export-backup')">
-          {{ backupPending ? 'Gerando backup...' : 'Exportar backup' }}
-        </button>
+        <div class="backup-action-stack">
+          <button class="secondary-cta" type="button" :disabled="backupPending" @click="emit('export-backup')">
+            {{ backupPending ? 'Gerando backup...' : 'Exportar backup' }}
+          </button>
 
-        <button class="primary-cta" type="button" :disabled="!backupPreview || restorePending" @click="emit('restore-backup')">
-          {{ restorePending ? 'Restaurando...' : 'Restaurar backup' }}
-        </button>
+          <button class="primary-cta" type="button" :disabled="!backupPreview || restorePending" @click="emit('restore-backup')">
+            {{ restorePending ? 'Restaurando...' : 'Restaurar backup' }}
+          </button>
+        </div>
       </div>
 
       <div v-if="backupPreview" class="backup-preview-card compact-backup-preview">

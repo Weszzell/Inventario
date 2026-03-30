@@ -1021,7 +1021,18 @@ a {
 }
 
 .access-user-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.access-user-list-shell,
+.audit-log-shell {
+  max-height: 520px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.access-user-list-shell {
+  border-radius: 18px;
 }
 
 .access-user-card {
@@ -1094,7 +1105,6 @@ a {
   .import-grid,
   .access-users-toolbar,
   .audit-toolbar,
-  .backup-action-row,
   .access-admin-stack {
     grid-template-columns: 1fr;
   }
@@ -1131,22 +1141,38 @@ a {
 }
 
 .compact-session-surface {
-  gap: 12px;
+  gap: 10px;
 }
 
 .compact-session-card {
   display: grid;
   gap: 6px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   border: 1px solid var(--line);
   border-radius: 16px;
   background: var(--panel-tint);
 }
 
+.session-inline-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.access-page .hero-intro-card.compact {
+  gap: 6px;
+}
+
+.access-page .hero-intro-card.compact .hero-copy {
+  max-width: 680px;
+}
+
 .access-form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
+  gap: 10px;
 }
 
 .inline-field-block {
@@ -1158,13 +1184,14 @@ a {
 }
 
 .access-form-grid .primary-cta {
-  min-width: 140px;
+  min-width: 132px;
 }
 
 
 .stacked-user-card {
   display: grid;
-  gap: 16px;
+  gap: 12px;
+  padding: 14px 16px;
 }
 
 .access-user-main,
@@ -1178,12 +1205,23 @@ a {
 }
 
 .access-user-actions {
-  align-items: flex-end;
+  align-items: end;
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) auto auto;
+  gap: 10px;
+}
+
+.access-user-actions > .secondary-cta {
+  min-width: 108px;
+}
+
+.access-user-actions .field-block {
+  min-width: 0;
 }
 
 .audit-log-list {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .audit-log-card {
@@ -1221,13 +1259,38 @@ a {
   min-width: 0;
 }
 
-.access-reset-panel {
-  display: grid;
-  gap: 12px;
-  padding: 14px;
+.access-users-toolbar,
+.audit-toolbar {
+  padding: 12px 14px;
   border: 1px solid var(--line);
   border-radius: 16px;
+  background: rgba(237, 244, 255, 0.45);
+}
+
+.access-user-list-shell,
+.audit-log-shell {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.48);
+  padding: 10px;
+}
+
+.access-users-surface .surface-head,
+.audit-surface .surface-head {
+  margin-bottom: 2px;
+}
+
+.access-reset-panel {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
   background: rgba(255, 255, 255, 0.76);
+}
+
+.access-reset-panel .form-actions-bar {
+  justify-content: flex-start;
 }
 
 .backup-file-field {
@@ -1244,19 +1307,25 @@ a {
   overflow: hidden;
 }
 
+.backup-rebuilt-stack {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
 .backup-file-field-full {
   max-width: 100%;
 }
 
-.backup-action-row {
+.backup-action-stack {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 180px));
-  gap: 12px;
-  justify-content: start;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  min-width: 0;
 }
 
-.backup-action-row .primary-cta,
-.backup-action-row .secondary-cta {
+.backup-action-stack .primary-cta,
+.backup-action-stack .secondary-cta {
   width: 100%;
   min-width: 0;
   text-align: center;
@@ -1300,7 +1369,7 @@ a {
 .access-backup-surface,
 .access-create-user-surface,
 .access-password-surface {
-  gap: 14px;
+  gap: 12px;
 }
 
 .audit-log-card,

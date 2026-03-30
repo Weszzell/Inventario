@@ -1544,3 +1544,24 @@ Resultado:
 
 ### 2026-03-30 - Reestruturacao do bloco de backup
 - O bloco de backup em `AccessAdminPanel.vue` foi redesenhado com arquivo em uma linha propria e botoes de exportar/restaurar em uma faixa separada, evitando disputa de espaco lateral.
+
+### 2026-03-30 - Ajuste fino da coluna direita de acessos
+- A coluna direita de `Acessos` recebeu ajuste fino no historico e na grade de usuarios, com cards mais fluidos e corre??o do separador de data.
+
+### 2026-03-30 - Compactacao dos cards de usuarios
+- Os cards de usuarios em `AccessUsersPanel.vue` e `main.css` ficaram mais compactos, com acoes alinhadas em grade e redefinicao de senha mais curta.
+
+### 2026-03-30 - Enxugamento do topo e da sessao de acessos
+- A pagina `Acessos` ficou com hero mais curto em `pages/acessos.vue` e a sessao atual em `AccessSessionPanel.vue` passou a exibir status como chip lateral, em uma leitura mais horizontal.
+
+### 2026-03-30 - Areas rolaveis de usuarios e historico
+- Usuarios e historico em `Acessos` passaram a ter rolagem propria, mantendo a pagina mais limpa sem cortar acesso aos dados.
+
+### 2026-03-30 - Harmonizacao de usuarios e historico
+- Os blocos de usuarios e historico em `main.css` receberam toolbars e areas rolaveis com o mesmo tratamento visual, deixando a leitura mais uniforme na pagina de `Acessos`.
+
+### 2026-03-30 - Compactacao da coluna esquerda de acessos
+- Sessao, senha, novo usuario e backup em `Acessos` ficaram mais compactos, com menos espacamento interno e formularios mais justos.
+
+### 2026-03-30 - Refluxo vertical do bloco de backup
+- O bloco de backup em `Acessos` foi reorganizado em pilha, com arquivo em cima e acoes abaixo, para evitar invasao lateral na coluna direita.
