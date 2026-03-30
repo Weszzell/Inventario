@@ -84,6 +84,7 @@ const columnWidthMode = ref<ColumnWidthMode>("comfortable");
 const importPreview = ref<ImportPreview | null>(null);
 const importPreviewError = ref("");
 const importPreviewPending = ref(false);
+const expandedRecordIds = ref<number[]>([]);
 
 const preferenceStorageKey = computed(() => {
   const datasetKey = (props.activeDatasetName || "base")
@@ -138,6 +139,11 @@ const hasActiveColumnFilters = computed(() =>
     return mode === "empty" || mode === "filled" || value.length > 0;
   }),
 );
+const totalVisibleColumns = computed(() => props.tableHeaders.length);
+const hiddenColumnsSummary = computed(() => Math.max(0, totalVisibleColumns.value - visibleTableHeaders.value.length));
+const visibleDensityLabel = computed(() => tableDensity.value === "compact" ? "Compacta" : "Confortavel");
+const visibleWidthLabel = computed(() => ({ compact: "Compacta", comfortable: "Confortavel", wide: "Ampla" }[columnWidthMode.value]));
+const allPagedAccordionExpanded = computed(() => Boolean(pagedExpandableRows.value.length) && pagedExpandableRows.value.every((record) => expandedRecordIds.value.includes(record.id)));
 
 function normalizeValue(value: unknown) {
   return String(value ?? "").trim();
@@ -326,7 +332,12 @@ watch([totalItems, pageSize], () => {
 
 watch(columnFilters, () => {
   currentPage.value = 1;
+  expandedRecordIds.value = [];
 }, { deep: true });
+
+watch([currentPage, pageSize, () => props.activeDatasetName], () => {
+  expandedRecordIds.value = [];
+});
 
 watch([pageSize, sortField, sortDirection, visibleColumns, tableDensity, columnWidthMode], () => {
   persistPreferences();
@@ -502,6 +513,30 @@ function resetTablePreferences() {
   applyPreferences(createDefaultPreferences());
 }
 
+function isRecordExpanded(recordId: number) {
+  return expandedRecordIds.value.includes(recordId);
+}
+
+function handleExpandedChange(payload: { recordId: number; expanded: boolean }) {
+  if (payload.expanded) {
+    if (!expandedRecordIds.value.includes(payload.recordId)) {
+      expandedRecordIds.value = [...expandedRecordIds.value, payload.recordId];
+    }
+    return;
+  }
+
+  expandedRecordIds.value = expandedRecordIds.value.filter((item) => item != payload.recordId);
+}
+
+function expandPagedRows() {
+  expandedRecordIds.value = Array.from(new Set([...expandedRecordIds.value, ...pagedExpandableRows.value.map((record) => record.id)]));
+}
+
+function collapsePagedRows() {
+  const currentIds = new Set(pagedExpandableRows.value.map((record) => record.id));
+  expandedRecordIds.value = expandedRecordIds.value.filter((item) => !currentIds.has(item));
+}
+
 function escapeCsvValue(value: unknown) {
   const normalized = String(value ?? "").replace(/"/g, '""');
   return `"${normalized}"`;
@@ -597,8 +632,11 @@ async function exportCurrentViewToExcel() {
 
       <template v-else-if="activeDataset">
         <div class="inventory-ux-summary">
-          <span class="header-chip">{{ visibleTableHeaders.length }} coluna(s) visiveis</span>
-          <span class="header-chip">{{ activeFilterCount }} filtro(s) ativo(s)</span>
+          <span class="header-chip">{{ visibleTableHeaders.length }} de {{ totalVisibleColumns }} coluna(s)</span>
+          <span class="header-chip" :class="{ 'header-chip-accent': hasActiveColumnFilters }">{{ activeFilterCount }} filtro(s) ativo(s)</span>
+          <span v-if="hiddenColumnsSummary" class="header-chip">{{ hiddenColumnsSummary }} oculta(s)</span>
+          <span class="header-chip">Densidade {{ visibleDensityLabel }}</span>
+          <span class="header-chip">Largura {{ visibleWidthLabel }}</span>
           <span class="header-chip">Importacao em modo {{ importModeLabel }}</span>
           <span class="header-chip">{{ resultSummary }}</span>
         </div>
@@ -777,6 +815,14 @@ async function exportCurrentViewToExcel() {
           </div>
 
           <div class="data-toolbar-actions">
+            <div v-if="activeExpandableConfig" class="accordion-toolbar-actions">
+              <button class="secondary-cta" type="button" :disabled="!pagedExpandableRows.length || allPagedAccordionExpanded" @click="expandPagedRows">
+                Expandir pagina
+              </button>
+              <button class="secondary-cta" type="button" :disabled="!pagedExpandableRows.length || !expandedRecordIds.length" @click="collapsePagedRows">
+                Recolher pagina
+              </button>
+            </div>
             <label class="toolbar-inline-field">
               <span>Ordenar por</span>
               <select :value="sortField" @change="sortField = ($event.target as HTMLSelectElement).value">
@@ -830,6 +876,8 @@ async function exportCurrentViewToExcel() {
             :record="record"
             :table-headers="visibleTableHeaders"
             :inventory-saving="inventorySaving"
+            :expanded="isRecordExpanded(record.id)"
+            @expanded-change="handleExpandedChange"
             @update-field="emit('update-field', $event)"
             @delete-record="emit('delete-record', $event)"
           />

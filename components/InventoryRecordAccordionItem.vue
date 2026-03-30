@@ -5,16 +5,18 @@ defineProps<{
   record: { id: number; identifier: string; data: Record<string, unknown> };
   tableHeaders: string[];
   inventorySaving: boolean;
+  expanded?: boolean;
 }>();
 
 const emit = defineEmits<{
   (e: "update-field", payload: { recordId: number; field: string; event: Event }): void;
   (e: "delete-record", recordId: number): void;
+  (e: "expanded-change", payload: { recordId: number; expanded: boolean }): void;
 }>();
 </script>
 
 <template>
-  <details class="record-accordion">
+  <details class="record-accordion" :open="expanded" @toggle="emit('expanded-change', { recordId: record.id, expanded: ($event.target as HTMLDetailsElement).open })">
     <summary class="record-accordion-head">
       <div>
         <p class="metric-label">Identificacao</p>

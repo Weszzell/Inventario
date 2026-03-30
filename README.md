@@ -1324,3 +1324,18 @@ Resultado:
 - a tela do inventario passa a mostrar contexto rapido sem depender de abrir a tabela
 - o operador entende mais facilmente qual base esta ativa e em qual modo esta trabalhando
 - o topo ficou mais orientado ao uso diario e a navegacao de operacao
+
+### 2026-03-30 - Refino da tabela do inventario
+
+Etapas concluidas nesta fase:
+
+- evolucao de [InventoryRecordList.vue](c:\Projeto\components\InventoryRecordList.vue) com resumo mais rico de colunas, filtros, densidade e largura atuais
+- inclusao de acoes rapidas para `Expandir pagina` e `Recolher pagina` no modo expansivel
+- ajuste em [InventoryRecordAccordionItem.vue](c:\Projeto\components\InventoryRecordAccordionItem.vue) para aceitar estado controlado de expansao
+- refinamento visual complementar em [main.css](c:\Projeto\assets\css\main.css)
+
+Resultado:
+
+- a tabela informa melhor o estado atual do recorte e da visualizacao
+- listas expansivas ficam mais praticas para abrir e fechar em lote na pagina atual
+- o operador ganha mais contexto sem perder o foco da edicao

@@ -377,6 +377,12 @@ a {
   border: 1px solid rgba(15, 91, 78, 0.08);
 }
 
+.header-chip-accent {
+  background: rgba(47, 111, 228, 0.18);
+  border-color: rgba(47, 111, 228, 0.24);
+  color: var(--brand-strong);
+}
+
 .metric-strip,
 .dataset-pills-grid {
   display: grid;
@@ -898,6 +904,13 @@ a {
   background: #fbfefd;
   color: var(--text);
   padding: 10px 12px;
+}
+
+.accordion-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .pagination-controls {
