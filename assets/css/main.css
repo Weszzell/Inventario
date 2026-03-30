@@ -199,21 +199,21 @@ a {
 
 .access-horizontal-layout {
   display: grid;
-  grid-template-columns: minmax(420px, 0.92fr) minmax(0, 1.68fr);
-  gap: 18px;
+  grid-template-columns: minmax(380px, 0.88fr) minmax(0, 1.72fr);
+  gap: 16px;
   align-items: start;
 }
 
 .access-primary-column,
 .access-secondary-column {
   display: grid;
-  gap: 16px;
+  gap: 14px;
   min-width: 0;
 }
 
 .access-primary-column {
   position: sticky;
-  top: 18px;
+  top: 14px;
 }
 
 .horizontal-feedback-card {
@@ -410,6 +410,15 @@ a {
   gap: 18px;
   flex-wrap: wrap;
 }
+
+.access-page .surface-card {
+  padding: 14px 16px;
+}
+
+.access-page .surface-head h3 {
+  font-size: 1.24rem;
+}
+
 
 .compact-head {
   align-items: flex-start;
@@ -1001,7 +1010,7 @@ a {
 
 .access-session-surface,
 .access-users-surface {
-  gap: 20px;
+  gap: 14px;
 }
 
 .session-overview-grid,
@@ -1070,6 +1079,7 @@ a {
   }
 }
 
+
 @media (max-width: 980px) {
   .session-overview-grid,
   .access-user-grid,
@@ -1084,7 +1094,8 @@ a {
   .import-grid,
   .access-users-toolbar,
   .audit-toolbar,
-  .backup-inline-actions {
+  .backup-action-row,
+  .access-admin-stack {
     grid-template-columns: 1fr;
   }
 
@@ -1109,18 +1120,47 @@ a {
 
 .access-admin-stack {
   display: grid;
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.access-backup-surface,
+.access-admin-stack > .feedback-banner {
+  grid-column: 1 / -1;
+}
+
+.compact-session-surface {
+  gap: 12px;
+}
+
+.compact-session-card {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel-tint);
 }
 
 .access-form-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
 }
 
 .inline-field-block {
   min-width: 180px;
 }
+
+.access-form-grid .form-actions-bar {
+  align-self: end;
+}
+
+.access-form-grid .primary-cta {
+  min-width: 140px;
+}
+
 
 .stacked-user-card {
   display: grid;
@@ -1155,10 +1195,24 @@ a {
   gap: 8px;
 }
 
+.compact-audit-log-list {
+  gap: 10px;
+}
+
+.compact-audit-log-card {
+  padding: 12px 14px;
+  gap: 6px;
+}
+
+.compact-audit-log-card .status-tag {
+  min-height: 28px;
+  padding: 4px 10px;
+}
+
 .access-users-toolbar,
 .audit-toolbar {
   display: grid;
-  grid-template-columns: minmax(240px, 1.4fr) repeat(2, minmax(160px, 220px));
+  grid-template-columns: minmax(240px, 1.4fr) minmax(160px, 220px);
   gap: 12px;
   align-items: end;
 }
@@ -1176,15 +1230,37 @@ a {
   background: rgba(255, 255, 255, 0.76);
 }
 
-.backup-inline-actions {
-  display: grid;
-  grid-template-columns: auto minmax(220px, 1fr) auto;
-  gap: 12px;
-  align-items: end;
-}
-
 .backup-file-field {
   min-width: 0;
+  width: 100%;
+}
+
+.backup-file-field input {
+  min-width: 0;
+  width: 100%;
+}
+
+.backup-surface-rebuilt {
+  overflow: hidden;
+}
+
+.backup-file-field-full {
+  max-width: 100%;
+}
+
+.backup-action-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 180px));
+  gap: 12px;
+  justify-content: start;
+}
+
+.backup-action-row .primary-cta,
+.backup-action-row .secondary-cta {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  white-space: normal;
 }
 
 .backup-preview-card {
@@ -1202,13 +1278,6 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  flex-wrap: wrap;
-}
-
-.access-panel-summary {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -1231,7 +1300,7 @@ a {
 .access-backup-surface,
 .access-create-user-surface,
 .access-password-surface {
-  gap: 16px;
+  gap: 14px;
 }
 
 .audit-log-card,

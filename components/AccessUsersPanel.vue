@@ -86,9 +86,8 @@ function submitReset(userId: number) {
         <article v-for="user in filteredUsers" :key="user.id" class="access-user-card stacked-user-card">
           <div class="access-user-main">
             <div>
-              <p class="metric-label">{{ user.role }}</p>
               <strong>{{ user.displayName }}</strong>
-              <p class="surface-copy compact-copy">{{ user.username }}</p>
+              <p class="surface-copy compact-copy">{{ user.username }} - {{ user.role }}</p>
             </div>
             <div class="access-user-meta">
               <span class="status-tag" :class="user.active ? 'is-active' : 'is-inactive'">
@@ -145,3 +144,4 @@ function submitReset(userId: number) {
     </template>
   </section>
 </template>
+

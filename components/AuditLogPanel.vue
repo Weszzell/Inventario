@@ -15,20 +15,15 @@ const props = defineProps<{
 
 const logQuery = ref("");
 const actionFilter = ref("all");
-const targetFilter = ref("all");
-
 const actionOptions = computed(() => ["all", ...new Set(props.auditLogs.map((log) => log.action))]);
-const targetOptions = computed(() => ["all", ...new Set(props.auditLogs.map((log) => log.targetType))]);
-
 const filteredLogs = computed(() => {
   const query = logQuery.value.trim().toLocaleLowerCase("pt-BR");
 
   return props.auditLogs.filter((log) => {
     const matchesQuery = !query || `${log.actorName} ${log.action} ${log.targetType} ${log.targetId ?? ""}`.toLocaleLowerCase("pt-BR").includes(query);
     const matchesAction = actionFilter.value === "all" || log.action === actionFilter.value;
-    const matchesTarget = targetFilter.value === "all" || log.targetType === targetFilter.value;
 
-    return matchesQuery && matchesAction && matchesTarget;
+    return matchesQuery && matchesAction;
   });
 });
 
@@ -48,19 +43,12 @@ function formatAction(value: string) {
         <p class="eyebrow">Historico</p>
         <h3>Acoes recentes</h3>
       </div>
-      <p class="surface-copy">O painel registra autenticacao, administracao de usuarios e operacoes do inventario.</p>
     </div>
 
     <p v-if="loading" class="surface-copy">Carregando historico...</p>
     <p v-else-if="!sessionUser" class="surface-copy">Entre no sistema para visualizar esta area.</p>
     <p v-else-if="!isAdmin" class="surface-copy">Somente administradores podem consultar o historico completo.</p>
     <template v-else>
-      <div class="access-panel-summary">
-        <span class="header-chip">{{ filteredLogs.length }} evento(s) no recorte</span>
-        <span class="header-chip">{{ actionOptions.length - 1 }} acao(oes)</span>
-        <span class="header-chip">{{ targetOptions.length - 1 }} alvo(s)</span>
-      </div>
-
       <div class="audit-toolbar">
         <label class="field-block access-toolbar-search">
           <span>Buscar no historico</span>
@@ -75,25 +63,15 @@ function formatAction(value: string) {
             </option>
           </select>
         </label>
-
-        <label class="field-block field-block-narrow inline-field-block">
-          <span>Alvo</span>
-          <select v-model="targetFilter">
-            <option v-for="target in targetOptions" :key="target" :value="target">
-              {{ target === 'all' ? 'Todos' : target }}
-            </option>
-          </select>
-        </label>
       </div>
 
-      <div class="audit-log-list">
-        <article v-for="log in filteredLogs" :key="log.id" class="audit-log-card">
+      <div class="audit-log-list compact-audit-log-list">
+        <article v-for="log in filteredLogs" :key="log.id" class="audit-log-card compact-audit-log-card">
           <div class="audit-log-topline">
             <strong>{{ log.actorName }}</strong>
             <span class="status-tag is-active">{{ formatAction(log.action) }}</span>
           </div>
-          <p class="surface-copy compact-copy">{{ log.targetType }}<span v-if="log.targetId"> #{{ log.targetId }}</span></p>
-          <p class="surface-copy compact-copy">{{ formatDate(log.createdAt) }}</p>
+          <p class="surface-copy compact-copy">{{ log.targetType }}<span v-if="log.targetId"> #{{ log.targetId }}</span> ? {{ formatDate(log.createdAt) }}</p>
         </article>
       </div>
 

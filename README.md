@@ -1516,3 +1516,31 @@ Resultado:
 - a lista de usuarios ficou mais objetiva
 - o foco visual passou para busca, status e acoes principais
 - o painel administrativo ganhou mais ritmo de leitura
+
+### 2026-03-30 - Simplificacao da lista e do historico de acessos
+- A lista de usuarios em AccessUsersPanel.vue ficou mais direta, sem destaque separado de perfil e com identificacao resumida em uma unica linha.
+- O historico em AuditLogPanel.vue perdeu o bloco de resumo e o filtro de alvo, mantendo so busca e acao para leitura mais simples.
+
+
+### 2026-03-30 - Compactacao dos formularios de acessos
+- Os formularios de senha e de novo usuario em AccessAdminPanel.vue receberam rotulos mais curtos e uma grade mais horizontal para reduzir altura visual.
+
+
+### 2026-03-30 - Compactacao do historico de acessos
+- O historico em AuditLogPanel.vue foi reduzido para cards mais curtos, com alvo e data na mesma linha para acelerar a leitura.
+
+
+### 2026-03-30 - Polimento final da tela de acessos
+- A grade principal de `Acessos` foi reequilibrada em `main.css`, com colunas mais harmonizadas, menos espaco entre blocos e cards mais compactos.
+
+### 2026-03-30 - Reorganizacao horizontal da administracao de acessos
+- O bloco administrativo de `Acessos` em `main.css` passou a distribuir senha e novo usuario lado a lado, deixando backup e feedback ocuparem a largura total.
+
+### 2026-03-30 - Ajuste do botao de restaurar backup
+- O bloco de backup em `main.css` recebeu colunas mais equilibradas e largura minima maior para o botao de restauracao, evitando que ele fique espremido.
+
+### 2026-03-30 - Contencao do bloco de restauracao de backup
+- O layout do backup em `main.css` passou a limitar a largura interna e a quebrar o botao de restauracao para uma segunda linha em larguras intermediarias, evitando invasao da coluna vizinha.
+
+### 2026-03-30 - Reestruturacao do bloco de backup
+- O bloco de backup em `AccessAdminPanel.vue` foi redesenhado com arquivo em uma linha propria e botoes de exportar/restaurar em uma faixa separada, evitando disputa de espaco lateral.

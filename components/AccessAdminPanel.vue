@@ -53,23 +53,17 @@ function handleRestoreFileChange(event: Event) {
 
 <template>
   <div class="access-admin-stack">
-    <div class="access-panel-summary" v-if="sessionUser">
-      <span class="header-chip">Senha e backup no mesmo painel</span>
-      <span class="header-chip" v-if="isAdmin">Administrador com gestao completa</span>
-      <span class="header-chip" v-else>Acesso operacional do proprio usuario</span>
-    </div>
     <section class="surface-card access-password-surface" v-if="sessionUser">
       <div class="surface-head compact-head">
         <div>
           <p class="eyebrow">Seguranca</p>
-          <h3>Trocar minha senha</h3>
+          <h3>Minha senha</h3>
         </div>
-        <p class="surface-copy">Atualize sua senha diretamente pela nova interface de acessos.</p>
       </div>
 
       <form class="access-form-grid" @submit.prevent="emit('change-password')">
         <label class="field-block">
-          <span>Senha atual</span>
+          <span>Atual</span>
           <input
             :value="passwordForm.currentPassword"
             type="password"
@@ -78,7 +72,7 @@ function handleRestoreFileChange(event: Event) {
           />
         </label>
         <label class="field-block">
-          <span>Nova senha</span>
+          <span>Nova</span>
           <input
             :value="passwordForm.nextPassword"
             type="password"
@@ -87,7 +81,7 @@ function handleRestoreFileChange(event: Event) {
           />
         </label>
         <label class="field-block">
-          <span>Confirmar nova senha</span>
+          <span>Confirmar</span>
           <input
             :value="passwordForm.confirmPassword"
             type="password"
@@ -97,7 +91,7 @@ function handleRestoreFileChange(event: Event) {
         </label>
         <div class="form-actions-bar">
           <button class="primary-cta" type="submit" :disabled="accessSaving">
-            {{ accessSaving ? 'Salvando...' : 'Atualizar senha' }}
+            {{ accessSaving ? 'Salvando...' : 'Salvar senha' }}
           </button>
         </div>
       </form>
@@ -107,14 +101,13 @@ function handleRestoreFileChange(event: Event) {
       <div class="surface-head compact-head">
         <div>
           <p class="eyebrow">Administracao</p>
-          <h3>Cadastrar novo usuario</h3>
+          <h3>Novo usuario</h3>
         </div>
-        <p class="surface-copy">Perfis administradores podem criar usuarios e definir o papel inicial de acesso.</p>
       </div>
 
       <form class="access-form-grid" @submit.prevent="emit('create-user')">
         <label class="field-block">
-          <span>Nome de exibicao</span>
+          <span>Nome</span>
           <input
             :value="userForm.displayName"
             type="text"
@@ -130,7 +123,7 @@ function handleRestoreFileChange(event: Event) {
           />
         </label>
         <label class="field-block">
-          <span>Senha inicial</span>
+          <span>Senha</span>
           <input
             :value="userForm.password"
             type="password"
@@ -147,30 +140,29 @@ function handleRestoreFileChange(event: Event) {
         </label>
         <div class="form-actions-bar">
           <button class="primary-cta" type="submit" :disabled="accessSaving">
-            {{ accessSaving ? 'Salvando...' : 'Criar usuario' }}
+            {{ accessSaving ? 'Salvando...' : 'Criar' }}
           </button>
         </div>
       </form>
     </section>
 
-    <section class="surface-card access-backup-surface" v-if="isAdmin">
+    <section class="surface-card access-backup-surface backup-surface-rebuilt" v-if="isAdmin">
       <div class="surface-head compact-head">
         <div>
           <p class="eyebrow">Backup</p>
           <h3>Exportar e restaurar</h3>
         </div>
-        <p class="surface-copy">Backup logico em JSON.</p>
       </div>
 
-      <div class="backup-inline-actions">
+      <label class="field-block backup-file-field backup-file-field-full">
+        <span>Arquivo JSON</span>
+        <input type="file" accept="application/json,.json" @change="handleRestoreFileChange" />
+      </label>
+
+      <div class="backup-action-row">
         <button class="secondary-cta" type="button" :disabled="backupPending" @click="emit('export-backup')">
           {{ backupPending ? 'Gerando backup...' : 'Exportar backup' }}
         </button>
-
-        <label class="field-block backup-file-field">
-          <span>Arquivo JSON</span>
-          <input type="file" accept="application/json,.json" @change="handleRestoreFileChange" />
-        </label>
 
         <button class="primary-cta" type="button" :disabled="!backupPreview || restorePending" @click="emit('restore-backup')">
           {{ restorePending ? 'Restaurando...' : 'Restaurar backup' }}
