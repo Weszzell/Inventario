@@ -53,6 +53,11 @@ function handleRestoreFileChange(event: Event) {
 
 <template>
   <div class="access-admin-stack">
+    <div class="access-panel-summary" v-if="sessionUser">
+      <span class="header-chip">Senha e backup no mesmo painel</span>
+      <span class="header-chip" v-if="isAdmin">Administrador com gestao completa</span>
+      <span class="header-chip" v-else>Acesso operacional do proprio usuario</span>
+    </div>
     <section class="surface-card access-password-surface" v-if="sessionUser">
       <div class="surface-head compact-head">
         <div>

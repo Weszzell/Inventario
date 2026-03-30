@@ -1339,3 +1339,17 @@ Resultado:
 - a tabela informa melhor o estado atual do recorte e da visualizacao
 - listas expansivas ficam mais praticas para abrir e fechar em lote na pagina atual
 - o operador ganha mais contexto sem perder o foco da edicao
+
+### 2026-03-30 - Refino de usabilidade dos acessos
+
+Etapas concluidas nesta fase:
+
+- evolucao de [acessos.vue](c:\Projeto\pages\acessos.vue) com faixa-resumo operacional da sessao, usuarios, historico e permissao atual
+- inclusao de contexto rapido em [AccessAdminPanel.vue](c:\Projeto\components\AccessAdminPanel.vue)
+- refinamento visual complementar em [main.css](c:\Projeto\assets\css\main.css) para leitura horizontal mais clara da area de acessos
+
+Resultado:
+
+- a tela de acessos passa a mostrar melhor o estado atual do ambiente e do perfil logado
+- administracao, usuarios e historico ficam mais faceis de interpretar sem precisar percorrer toda a tela
+- a pagina fica mais consistente com o inventario em termos de contexto operacional

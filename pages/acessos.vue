@@ -32,9 +32,32 @@ const {
 } = useWebInventory();
 
 const heroChips = computed(() => [
-  status.value?.database?.provider ?? 'postgresql',
-  `${status.value?.stats?.users ?? 0} usuarios`,
-  sessionUser.value ? 'Sessao ativa' : 'Sessao inativa',
+  status.value?.database?.provider ?? "postgresql",
+  `${users.value.length || (status.value?.stats?.users ?? 0)} usuarios`,
+  sessionUser.value ? "Sessao ativa" : "Sessao inativa",
+]);
+
+const accessHighlights = computed(() => [
+  {
+    label: "Sessao atual",
+    value: sessionUser.value?.displayName || "Sem sessao",
+    note: sessionUser.value ? `${sessionUser.value.username} | ${sessionUser.value.role}` : "Entre para operar o ambiente",
+  },
+  {
+    label: "Usuarios",
+    value: String(users.value.length || status.value?.stats?.users || 0),
+    note: isAdmin.value ? "Administracao completa disponivel" : "Visao resumida do ambiente",
+  },
+  {
+    label: "Historico",
+    value: String(auditLogs.value.length || 0),
+    note: auditLogs.value.length ? "Eventos recentes carregados" : "Sem eventos carregados nesta sessao",
+  },
+  {
+    label: "Permissao",
+    value: isAdmin.value ? "Administrador" : "Editor",
+    note: isAdmin.value ? "Pode administrar usuarios e backups" : "Acesso operacional restrito",
+  },
 ]);
 
 function handleUserFormUpdate(payload: { field: string; value: string }) {
@@ -85,44 +108,54 @@ onMounted(bootstrap);
       @submit="handleLogin"
     />
 
-    <section v-else class="access-horizontal-layout">
-      <div class="access-primary-column">
-        <AccessSessionPanel :session-user="sessionUser" />
-        <AccessAdminPanel
-          :session-user="sessionUser"
-          :is-admin="isAdmin"
-          :user-form="userForm"
-          :password-form="passwordForm"
-          :access-saving="accessSaving"
-          :access-feedback="accessFeedback"
-          :access-error="accessError"
-          :backup-pending="backupPending"
-          :restore-pending="restorePending"
-          :backup-preview="backupPreview"
-          @update:user-form="handleUserFormUpdate"
-          @update:password-form="handlePasswordFormUpdate"
-          @create-user="createUser"
-          @change-password="changeOwnPassword"
-          @export-backup="exportSystemBackup"
-          @select-restore-file="selectRestoreFile"
-          @restore-backup="restoreSystemBackup"
-        />
-      </div>
+    <template v-else>
+      <section class="access-highlight-strip">
+        <article v-for="item in accessHighlights" :key="item.label" class="inventory-highlight-card">
+          <p class="metric-label">{{ item.label }}</p>
+          <strong class="inventory-highlight-value">{{ item.value }}</strong>
+          <p class="metric-note">{{ item.note }}</p>
+        </article>
+      </section>
 
-      <div class="access-secondary-column">
-        <AccessUsersPanel
-          :loading="loading"
-          :session-user="sessionUser"
-          :is-admin="isAdmin"
-          :users="users"
-          :access-saving="accessSaving"
-          @toggle-user="handleToggleUser"
-          @update-user-role="handleRoleUpdate"
-          @reset-user-password="handleResetUserPassword"
-        />
+      <section class="access-horizontal-layout">
+        <div class="access-primary-column">
+          <AccessSessionPanel :session-user="sessionUser" />
+          <AccessAdminPanel
+            :session-user="sessionUser"
+            :is-admin="isAdmin"
+            :user-form="userForm"
+            :password-form="passwordForm"
+            :access-saving="accessSaving"
+            :access-feedback="accessFeedback"
+            :access-error="accessError"
+            :backup-pending="backupPending"
+            :restore-pending="restorePending"
+            :backup-preview="backupPreview"
+            @update:user-form="handleUserFormUpdate"
+            @update:password-form="handlePasswordFormUpdate"
+            @create-user="createUser"
+            @change-password="changeOwnPassword"
+            @export-backup="exportSystemBackup"
+            @select-restore-file="selectRestoreFile"
+            @restore-backup="restoreSystemBackup"
+          />
+        </div>
 
-        <AuditLogPanel :loading="loading" :session-user="sessionUser" :is-admin="isAdmin" :audit-logs="auditLogs" />
-      </div>
-    </section>
+        <div class="access-secondary-column">
+          <AccessUsersPanel
+            :loading="loading"
+            :session-user="sessionUser"
+            :is-admin="isAdmin"
+            :users="users"
+            :access-saving="accessSaving"
+            @toggle-user="handleToggleUser"
+            @update-user-role="handleRoleUpdate"
+            @reset-user-password="handleResetUserPassword"
+          />
+
+          <AuditLogPanel :loading="loading" :session-user="sessionUser" :is-admin="isAdmin" :audit-logs="auditLogs" />
+        </div>
+      </section>
+    </template>
   </main>
 </template>
