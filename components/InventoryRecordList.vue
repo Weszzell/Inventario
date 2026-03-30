@@ -1,23 +1,10 @@
 <script setup lang="ts">
 import { formatFieldLabel } from "~/utils/field-label";
 
-type FilterMode = "contains" | "equals" | "empty" | "filled";
-
-type FilterState = {
-  value: string;
-  mode: FilterMode;
-};
-
-type TableDensity = "compact" | "comfortable";
-type ColumnWidthMode = "compact" | "comfortable" | "wide";
-
 type TablePreferences = {
   pageSize: number;
   sortField: string;
   sortDirection: "asc" | "desc";
-  visibleColumns: string[];
-  density: TableDensity;
-  columnWidthMode: ColumnWidthMode;
 };
 
 type ImportPreview = {
@@ -59,13 +46,6 @@ const naturalCollator = new Intl.Collator("pt-BR", {
   ignorePunctuation: true,
 });
 
-const filterModeOptions: Array<{ value: FilterMode; label: string }> = [
-  { value: "contains", label: "Contem" },
-  { value: "equals", label: "Igual" },
-  { value: "empty", label: "Vazio" },
-  { value: "filled", label: "Preenchido" },
-];
-
 const preferenceStoragePrefix = "web-inventory:table-prefs:";
 const defaultPageSize = 25;
 
@@ -74,13 +54,9 @@ const sortDirection = ref<"asc" | "desc">("asc");
 const currentPage = ref(1);
 const pageSize = ref(defaultPageSize);
 const pageSizeOptions = [25, 50, 100];
-const columnFilters = ref<Record<string, FilterState>>({});
 const importMode = ref<"append" | "replace">("append");
 const importFile = ref<File | null>(null);
 const exportPending = ref(false);
-const visibleColumns = ref<string[]>([]);
-const tableDensity = ref<TableDensity>("comfortable");
-const columnWidthMode = ref<ColumnWidthMode>("comfortable");
 const importPreview = ref<ImportPreview | null>(null);
 const importPreviewError = ref("");
 const importPreviewPending = ref(false);
@@ -103,46 +79,16 @@ const sortOptions = computed(() => {
   return options;
 });
 
-const filterFields = computed(() => {
-  const items = props.tableHeaders.map((field) => ({ key: field, label: formatFieldLabel(field) }));
-  if (props.activeExpandableConfig) {
-    return [{ key: "__identifier", label: "Identificacao" }, ...items];
-  }
-  return items;
-});
-
-const columnVisibilityOptions = computed(() => props.tableHeaders.map((field) => ({ key: field, label: formatFieldLabel(field) })));
-const visibleTableHeaders = computed(() => props.tableHeaders.filter((field) => visibleColumns.value.includes(field)));
-const hiddenColumnCount = computed(() => Math.max(0, props.tableHeaders.length - visibleTableHeaders.value.length));
+const visibleTableHeaders = computed(() => props.tableHeaders);
 const existingDatasetFields = computed(() => props.activeDataset?.fields ?? props.tableHeaders);
 const canSubmitImport = computed(() => Boolean(importFile.value) && Boolean(importPreview.value) && !importPreviewError.value);
-const tableShellClass = computed(() => [
-  `table-density-${tableDensity.value}`,
-  `table-width-${columnWidthMode.value}`,
-]);
-const activeFilterCount = computed(() =>
-  Object.values(columnFilters.value).filter((filter) => {
-    const mode = filter?.mode ?? "contains";
-    const value = String(filter?.value ?? "").trim();
-    return mode === "empty" || mode === "filled" || value.length > 0;
-  }).length,
-);
+const tableShellClass = computed(() => [] as string[]);
 const importModeLabel = computed(() => (importMode.value === "append" ? "Acrescentar" : "Substituir"));
 const resultSummary = computed(() => {
   if (!totalItems.value) return "Sem registros para a combinacao atual.";
   return `Mostrando ${pageStart.value}-${pageEnd.value} de ${totalItems.value} registro(s).`;
 });
-const hasActiveColumnFilters = computed(() =>
-  Object.values(columnFilters.value).some((filter) => {
-    const mode = filter?.mode ?? "contains";
-    const value = String(filter?.value ?? "").trim();
-    return mode === "empty" || mode === "filled" || value.length > 0;
-  }),
-);
 const totalVisibleColumns = computed(() => props.tableHeaders.length);
-const hiddenColumnsSummary = computed(() => Math.max(0, totalVisibleColumns.value - visibleTableHeaders.value.length));
-const visibleDensityLabel = computed(() => tableDensity.value === "compact" ? "Compacta" : "Confortavel");
-const visibleWidthLabel = computed(() => ({ compact: "Compacta", comfortable: "Confortavel", wide: "Ampla" }[columnWidthMode.value]));
 const allPagedAccordionExpanded = computed(() => Boolean(pagedExpandableRows.value.length) && pagedExpandableRows.value.every((record) => expandedRecordIds.value.includes(record.id)));
 
 function normalizeValue(value: unknown) {
@@ -167,14 +113,6 @@ function normalizeFieldKey(value: string) {
     .join("");
 }
 
-function getFilterValue(record: { identifier?: string; data: Record<string, unknown> }, field: string) {
-  if (field === "__identifier") {
-    return normalizeValue(record.identifier);
-  }
-
-  return normalizeValue(record.data?.[field]);
-}
-
 function getSortValue(record: { identifier?: string; data: Record<string, unknown> }) {
   if (sortField.value === "__identifier") {
     return normalizeValue(record.identifier);
@@ -185,21 +123,6 @@ function getSortValue(record: { identifier?: string; data: Record<string, unknow
   }
 
   return normalizeValue(record.data?.[sortField.value]);
-}
-
-function matchesColumnFilters(record: { identifier?: string; data: Record<string, unknown> }) {
-  return Object.entries(columnFilters.value).every(([field, filter]) => {
-    const mode = filter?.mode ?? "contains";
-    const rawValue = getFilterValue(record, field);
-    const haystack = rawValue.toLocaleLowerCase("pt-BR");
-    const needle = normalizeValue(filter?.value).toLocaleLowerCase("pt-BR");
-
-    if (mode === "empty") return !haystack;
-    if (mode === "filled") return Boolean(haystack);
-    if (!needle) return true;
-    if (mode === "equals") return haystack === needle;
-    return haystack.includes(needle);
-  });
 }
 
 function sortRecords<T extends { identifier?: string; data: Record<string, unknown> }>(records: T[]) {
@@ -213,8 +136,8 @@ function sortRecords<T extends { identifier?: string; data: Record<string, unkno
   });
 }
 
-const filteredExpandableRows = computed(() => props.expandableRows.filter(matchesColumnFilters));
-const filteredTableRows = computed(() => props.tableRows.filter(matchesColumnFilters));
+const filteredExpandableRows = computed(() => props.expandableRows);
+const filteredTableRows = computed(() => props.tableRows);
 const sortedExpandableRows = computed(() => sortRecords(filteredExpandableRows.value));
 const sortedTableRows = computed(() => sortRecords(filteredTableRows.value));
 const totalItems = computed(() => (props.activeExpandableConfig ? sortedExpandableRows.value.length : sortedTableRows.value.length));
@@ -237,9 +160,6 @@ function createDefaultPreferences(): TablePreferences {
     pageSize: defaultPageSize,
     sortField: props.activeExpandableConfig ? "__identifier" : props.tableHeaders[0] ?? "",
     sortDirection: "asc",
-    visibleColumns: [...props.tableHeaders],
-    density: "comfortable",
-    columnWidthMode: "comfortable",
   };
 }
 
@@ -255,18 +175,6 @@ function syncSortField() {
   }
 }
 
-function syncColumnFilters() {
-  const available = new Set(filterFields.value.map((field) => field.key));
-  const nextEntries = Object.entries(columnFilters.value).filter(([field]) => available.has(field));
-  columnFilters.value = Object.fromEntries(nextEntries);
-}
-
-function syncVisibleColumns() {
-  const available = new Set(props.tableHeaders);
-  const nextVisible = visibleColumns.value.filter((field) => available.has(field));
-  visibleColumns.value = nextVisible.length ? nextVisible : [...props.tableHeaders];
-}
-
 function readStoredPreferences() {
   if (!import.meta.client) return createDefaultPreferences();
 
@@ -279,9 +187,6 @@ function readStoredPreferences() {
       pageSize: pageSizeOptions.includes(Number(parsed.pageSize)) ? Number(parsed.pageSize) : defaultPageSize,
       sortField: typeof parsed.sortField === "string" ? parsed.sortField : createDefaultPreferences().sortField,
       sortDirection: parsed.sortDirection === "desc" ? "desc" : "asc",
-      visibleColumns: Array.isArray(parsed.visibleColumns) ? parsed.visibleColumns.filter((item): item is string => typeof item === "string") : [...props.tableHeaders],
-      density: parsed.density === "compact" ? "compact" : "comfortable",
-      columnWidthMode: parsed.columnWidthMode === "compact" || parsed.columnWidthMode === "wide" ? parsed.columnWidthMode : "comfortable",
     };
   } catch {
     return createDefaultPreferences();
@@ -292,11 +197,7 @@ function applyPreferences(preferences: TablePreferences) {
   pageSize.value = preferences.pageSize;
   sortField.value = preferences.sortField;
   sortDirection.value = preferences.sortDirection;
-  visibleColumns.value = preferences.visibleColumns.length ? preferences.visibleColumns : [...props.tableHeaders];
-  tableDensity.value = preferences.density;
-  columnWidthMode.value = preferences.columnWidthMode;
   syncSortField();
-  syncVisibleColumns();
 }
 
 function persistPreferences() {
@@ -306,9 +207,6 @@ function persistPreferences() {
     pageSize: pageSize.value,
     sortField: sortField.value,
     sortDirection: sortDirection.value,
-    visibleColumns: visibleColumns.value,
-    density: tableDensity.value,
-    columnWidthMode: columnWidthMode.value,
   };
 
   window.localStorage.setItem(preferenceStorageKey.value, JSON.stringify(payload));
@@ -318,7 +216,6 @@ watch(
   () => [props.activeDatasetName, props.tableHeaders.join("|"), props.activeExpandableConfig ? "expandable" : "table"],
   () => {
     currentPage.value = 1;
-    syncColumnFilters();
     applyPreferences(readStoredPreferences());
   },
   { immediate: true },
@@ -330,16 +227,11 @@ watch([totalItems, pageSize], () => {
   }
 });
 
-watch(columnFilters, () => {
-  currentPage.value = 1;
-  expandedRecordIds.value = [];
-}, { deep: true });
-
 watch([currentPage, pageSize, () => props.activeDatasetName], () => {
   expandedRecordIds.value = [];
 });
 
-watch([pageSize, sortField, sortDirection, visibleColumns, tableDensity, columnWidthMode], () => {
+watch([pageSize, sortField, sortDirection], () => {
   persistPreferences();
 }, { deep: true });
 
@@ -361,36 +253,6 @@ function goToNextPage() {
   currentPage.value = Math.min(totalPages.value, currentPage.value + 1);
 }
 
-function ensureFilter(field: string) {
-  return columnFilters.value[field] ?? { value: "", mode: "contains" as FilterMode };
-}
-
-function updateColumnFilter(field: string, value: string) {
-  columnFilters.value = {
-    ...columnFilters.value,
-    [field]: {
-      ...ensureFilter(field),
-      value,
-    },
-  };
-}
-
-function updateColumnFilterMode(field: string, mode: FilterMode) {
-  columnFilters.value = {
-    ...columnFilters.value,
-    [field]: {
-      ...ensureFilter(field),
-      mode,
-      value: mode === "empty" || mode === "filled" ? "" : ensureFilter(field).value,
-    },
-  };
-}
-
-function handleFilterModeChange(field: string, event: Event) {
-  const nextMode = (event.target as HTMLSelectElement).value as FilterMode;
-  updateColumnFilterMode(field, nextMode);
-}
-
 function handleImportModeChange(event: Event) {
   importMode.value = ((event.target as HTMLSelectElement).value || "append") as "append" | "replace";
 }
@@ -401,10 +263,6 @@ function handleSortDirectionChange(event: Event) {
 
 function handlePageSizeChange(event: Event) {
   pageSize.value = Number((event.target as HTMLSelectElement).value) || defaultPageSize;
-}
-
-function clearColumnFilters() {
-  columnFilters.value = {};
 }
 
 async function buildImportPreview(file: File) {
@@ -497,20 +355,6 @@ async function handleImportFileChange(event: Event) {
 function submitImport() {
   if (!importFile.value || !canSubmitImport.value) return;
   emit("import-dataset", { file: importFile.value, mode: importMode.value });
-}
-
-function toggleColumnVisibility(field: string) {
-  if (visibleColumns.value.includes(field)) {
-    if (visibleColumns.value.length === 1) return;
-    visibleColumns.value = visibleColumns.value.filter((item) => item !== field);
-    return;
-  }
-
-  visibleColumns.value = [...visibleColumns.value, field].sort((left, right) => props.tableHeaders.indexOf(left) - props.tableHeaders.indexOf(right));
-}
-
-function resetTablePreferences() {
-  applyPreferences(createDefaultPreferences());
 }
 
 function isRecordExpanded(recordId: number) {
@@ -632,96 +476,9 @@ async function exportCurrentViewToExcel() {
 
       <template v-else-if="activeDataset">
         <div class="inventory-ux-summary">
-          <span class="header-chip">{{ visibleTableHeaders.length }} de {{ totalVisibleColumns }} coluna(s)</span>
-          <span class="header-chip" :class="{ 'header-chip-accent': hasActiveColumnFilters }">{{ activeFilterCount }} filtro(s) ativo(s)</span>
-          <span v-if="hiddenColumnsSummary" class="header-chip">{{ hiddenColumnsSummary }} oculta(s)</span>
-          <span class="header-chip">Densidade {{ visibleDensityLabel }}</span>
-          <span class="header-chip">Largura {{ visibleWidthLabel }}</span>
+          <span class="header-chip">{{ totalVisibleColumns }} coluna(s)</span>
           <span class="header-chip">Importacao em modo {{ importModeLabel }}</span>
           <span class="header-chip">{{ resultSummary }}</span>
-        </div>
-
-        <div class="column-filters-surface preferences-surface">
-          <div class="column-filters-head">
-            <div>
-              <p class="eyebrow">Preferencias da tabela</p>
-              <p class="surface-copy">Escolha colunas visiveis e mantenha paginacao e ordenacao salvas nesta base.</p>
-            </div>
-            <button class="secondary-cta" type="button" @click="resetTablePreferences">
-              Restaurar padrao
-            </button>
-          </div>
-
-          <div class="table-tuning-grid">
-            <label class="field-block field-block-narrow">
-              <span>Densidade</span>
-              <select v-model="tableDensity">
-                <option value="compact">Compacta</option>
-                <option value="comfortable">Confortavel</option>
-              </select>
-            </label>
-
-            <label class="field-block field-block-narrow">
-              <span>Largura das colunas</span>
-              <select v-model="columnWidthMode">
-                <option value="compact">Compacta</option>
-                <option value="comfortable">Confortavel</option>
-                <option value="wide">Ampla</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="preferences-grid">
-            <label v-for="field in columnVisibilityOptions" :key="field.key" class="column-visibility-chip">
-              <input
-                :checked="visibleColumns.includes(field.key)"
-                type="checkbox"
-                :disabled="visibleColumns.length === 1 && visibleColumns.includes(field.key)"
-                @change="toggleColumnVisibility(field.key)"
-              />
-              <span>{{ field.label }}</span>
-            </label>
-          </div>
-
-          <p class="surface-copy preferences-summary">
-            {{ visibleTableHeaders.length }} coluna(s) visivel(is)
-            <span v-if="hiddenColumnCount"> e {{ hiddenColumnCount }} oculta(s)</span>
-          </p>
-        </div>
-
-        <div class="column-filters-surface">
-          <div class="column-filters-head">
-            <div>
-              <p class="eyebrow">Filtros por coluna</p>
-              <p class="surface-copy">Use modos como contem, igual, vazio e preenchido para refinar a base.</p>
-            </div>
-            <button v-if="hasActiveColumnFilters" class="secondary-cta" type="button" @click="clearColumnFilters">
-              Limpar filtros
-            </button>
-          </div>
-
-          <div class="column-filters-grid advanced-filters-grid">
-            <div v-for="field in filterFields" :key="field.key" class="advanced-filter-card">
-              <label class="field-block">
-                <span>{{ field.label }}</span>
-                <select :value="ensureFilter(field.key).mode" @change="handleFilterModeChange(field.key, $event)">
-                  <option v-for="option in filterModeOptions" :key="option.value" :value="option.value">
-                    {{ option.label }}
-                  </option>
-                </select>
-              </label>
-
-              <label v-if="!['empty', 'filled'].includes(ensureFilter(field.key).mode)" class="field-block">
-                <span>Valor</span>
-                <input
-                  :value="ensureFilter(field.key).value"
-                  type="search"
-                  :placeholder="`Filtrar ${field.label}`"
-                  @input="updateColumnFilter(field.key, ($event.target as HTMLInputElement).value)"
-                />
-              </label>
-            </div>
-          </div>
         </div>
 
         <div class="import-surface">

@@ -742,49 +742,6 @@ a {
   background: rgba(237, 244, 255, 0.35);
 }
 
-.preferences-surface {
-  background: rgba(233, 241, 255, 0.55);
-}
-
-.preferences-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 10px;
-}
-
-.table-tuning-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 220px));
-  gap: 12px;
-}
-
-.column-visibility-chip {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.72);
-  color: var(--text);
-}
-
-.column-visibility-chip input {
-  width: 16px;
-  height: 16px;
-  margin: 0;
-}
-
-.column-visibility-chip span {
-  color: var(--text);
-  font-weight: 700;
-}
-
-.preferences-summary {
-  font-size: 0.92rem;
-}
-
 .import-preview-surface {
   display: grid;
   gap: 14px;

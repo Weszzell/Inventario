@@ -1353,3 +1353,18 @@ Resultado:
 - a tela de acessos passa a mostrar melhor o estado atual do ambiente e do perfil logado
 - administracao, usuarios e historico ficam mais faceis de interpretar sem precisar percorrer toda a tela
 - a pagina fica mais consistente com o inventario em termos de contexto operacional
+
+
+### 2026-03-30 - Simplificacao da area da tabela
+
+Etapas concluidas nesta fase:
+
+- remocao da secao `Filtros por coluna` em [InventoryRecordList.vue](c:\Projeto\components\InventoryRecordList.vue)
+- remocao da secao `Preferencias da tabela` em [InventoryRecordList.vue](c:\Projeto\components\InventoryRecordList.vue)
+- limpeza do CSS associado em [main.css](c:\Projeto\assets\css\main.css)
+
+Resultado:
+
+- a base ativa ficou mais direta e com menos blocos auxiliares
+- a operacao diaria passa a depender so da busca principal, ordenacao, paginacao e importacao/exportacao
+- a tela ganha mais foco no que realmente esta sendo usado
