@@ -157,47 +157,35 @@ function handleRestoreFileChange(event: Event) {
       <div class="surface-head compact-head">
         <div>
           <p class="eyebrow">Backup</p>
-          <h3>Exportar e restaurar sistema</h3>
+          <h3>Exportar e restaurar</h3>
         </div>
-        <p class="surface-copy">Use backup logico em JSON para proteger usuarios, bases, registros, auditoria e metadados.</p>
+        <p class="surface-copy">Backup logico em JSON.</p>
       </div>
 
-      <div class="access-form-grid backup-grid">
-        <div class="backup-card-inline">
-          <p class="metric-label">Exportar estado atual</p>
-          <p class="surface-copy">Baixa um arquivo JSON completo da base nova para guardar ou restaurar depois.</p>
-          <button class="secondary-cta" type="button" :disabled="backupPending" @click="emit('export-backup')">
-            {{ backupPending ? 'Gerando backup...' : 'Exportar backup' }}
-          </button>
-        </div>
+      <div class="backup-inline-actions">
+        <button class="secondary-cta" type="button" :disabled="backupPending" @click="emit('export-backup')">
+          {{ backupPending ? 'Gerando backup...' : 'Exportar backup' }}
+        </button>
 
-        <div class="backup-card-inline">
-          <p class="metric-label">Restaurar backup</p>
-          <label class="field-block">
-            <span>Arquivo JSON</span>
-            <input type="file" accept="application/json,.json" @change="handleRestoreFileChange" />
-          </label>
-          <button class="primary-cta" type="button" :disabled="!backupPreview || restorePending" @click="emit('restore-backup')">
-            {{ restorePending ? 'Restaurando...' : 'Restaurar backup' }}
-          </button>
-        </div>
+        <label class="field-block backup-file-field">
+          <span>Arquivo JSON</span>
+          <input type="file" accept="application/json,.json" @change="handleRestoreFileChange" />
+        </label>
+
+        <button class="primary-cta" type="button" :disabled="!backupPreview || restorePending" @click="emit('restore-backup')">
+          {{ restorePending ? 'Restaurando...' : 'Restaurar backup' }}
+        </button>
       </div>
 
-      <div v-if="backupPreview" class="backup-preview-card">
+      <div v-if="backupPreview" class="backup-preview-card compact-backup-preview">
         <div class="backup-preview-head">
-          <div>
-            <p class="metric-label">Arquivo selecionado</p>
-            <strong>{{ backupPreview.fileName }}</strong>
-          </div>
+          <strong>{{ backupPreview.fileName }}</strong>
           <span class="header-chip">Versao {{ backupPreview.version }}</span>
         </div>
-        <p class="surface-copy">Exportado em {{ new Date(backupPreview.exportedAt).toLocaleString('pt-BR') }}</p>
         <div class="backup-preview-stats">
           <span class="header-chip">{{ backupPreview.users }} usuarios</span>
           <span class="header-chip">{{ backupPreview.datasets }} bases</span>
           <span class="header-chip">{{ backupPreview.records }} registros</span>
-          <span class="header-chip">{{ backupPreview.auditLogs }} logs</span>
-          <span class="header-chip">{{ backupPreview.appMeta }} metadados</span>
         </div>
       </div>
     </section>

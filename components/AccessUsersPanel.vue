@@ -39,9 +39,6 @@ const filteredUsers = computed(() => {
   });
 });
 
-const activeUsersCount = computed(() => filteredUsers.value.filter((user) => user.active).length);
-const inactiveUsersCount = computed(() => filteredUsers.value.filter((user) => !user.active).length);
-
 function toggleResetPanel(userId: number) {
   resetOpenUserId.value = resetOpenUserId.value === userId ? null : userId;
 }
@@ -61,21 +58,14 @@ function submitReset(userId: number) {
     <div class="surface-head compact-head">
       <div>
         <p class="eyebrow">Usuarios</p>
-        <h3>Lista de acessos da base nova</h3>
+        <h3>Administracao de usuarios</h3>
       </div>
-      <p class="surface-copy">A listagem completa permanece restrita a perfis administradores.</p>
     </div>
 
     <p v-if="loading" class="surface-copy">Carregando estado atual...</p>
     <p v-else-if="!sessionUser" class="surface-copy">Entre no sistema para visualizar esta area.</p>
     <p v-else-if="!isAdmin" class="surface-copy">Seu perfil atual nao tem permissao para listar todos os usuarios.</p>
     <template v-else>
-      <div class="access-panel-summary">
-        <span class="header-chip">{{ filteredUsers.length }} usuario(s) no recorte</span>
-        <span class="header-chip">{{ activeUsersCount }} ativo(s)</span>
-        <span class="header-chip">{{ inactiveUsersCount }} bloqueado(s)</span>
-      </div>
-
       <div class="access-users-toolbar">
         <label class="field-block access-toolbar-search">
           <span>Buscar usuario</span>
@@ -125,7 +115,7 @@ function submitReset(userId: number) {
             </button>
 
             <button class="secondary-cta" type="button" :disabled="accessSaving" @click="toggleResetPanel(user.id)">
-              {{ resetOpenUserId === user.id ? 'Fechar senha' : 'Redefinir senha' }}
+              {{ resetOpenUserId === user.id ? 'Fechar' : 'Senha' }}
             </button>
           </div>
 

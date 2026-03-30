@@ -18,7 +18,6 @@ const {
   loginForm,
   newRecordForm,
   newFieldName,
-  datasetCards,
   tableHeaders,
   tableRows,
   activeExpandableConfig,
@@ -46,33 +45,6 @@ const heroChips = computed(() => {
   return items;
 });
 
-const activeDatasetSummary = computed(() =>
-  datasetCards.value.find((dataset) => dataset.name === activeDatasetName.value) ?? null,
-);
-
-const operationalHighlights = computed(() => [
-  {
-    label: "Base ativa",
-    value: activeDatasetName.value || "Sem base",
-    note: activeDatasetSummary.value ? `${activeDatasetSummary.value.recordCount} registro(s)` : "Selecione uma base para operar",
-  },
-  {
-    label: "Campos visiveis",
-    value: String(tableHeaders.value.length || 0),
-    note: tableHeaders.value.length ? "Estrutura pronta para leitura e cadastro" : "Aguardando carregamento da base",
-  },
-  {
-    label: "Visualizacao",
-    value: activeExpandableConfig.value ? "Expansivel" : "Tabela",
-    note: activeExpandableConfig.value ? "Identificacao principal destacada" : "Edicao direta em formato de grade",
-  },
-  {
-    label: "Busca atual",
-    value: datasetQuery.value ? "Filtrada" : "Completa",
-    note: datasetQuery.value ? datasetQuery.value : "Sem termo de busca aplicado",
-  },
-]);
-
 onMounted(async () => {
   bindInventoryWatchers();
   await bootstrap();
@@ -83,9 +55,10 @@ onMounted(async () => {
   <main class="page-shell inventory-page">
     <UiHeroSection
       eyebrow="Inventario"
-      title="Visualizacao mais pratica para consultar e operar o parque."
-      description="A nova interface prioriza leitura, busca rapida e edicao direta sem perder o controle da estrutura da base."
+      title="Controle de equipamentos"
+      description="Consulta e operacao direta da base ativa."
       :chips="heroChips"
+      compact
     />
 
     <AuthLoginCard
@@ -101,14 +74,6 @@ onMounted(async () => {
     />
 
     <template v-else>
-      <section class="inventory-highlight-strip">
-        <article v-for="item in operationalHighlights" :key="item.label" class="inventory-highlight-card">
-          <p class="metric-label">{{ item.label }}</p>
-          <strong class="inventory-highlight-value">{{ item.value }}</strong>
-          <p class="metric-note">{{ item.note }}</p>
-        </article>
-      </section>
-
       <section class="inventory-layout-flat">
         <InventoryWorkspace
           :active-dataset-name="activeDatasetName"
@@ -122,11 +87,6 @@ onMounted(async () => {
           @create-record="createRecord"
           @add-field="addField"
         />
-
-        <section class="inventory-overview-row">
-          <InventoryDatasetOverview :active-dataset-name="activeDatasetName" :dataset-cards="datasetCards" />
-        </section>
-
         <section v-if="inventoryFeedback || inventoryError" class="feedback-banner surface-card horizontal-feedback-card">
           <p v-if="inventoryFeedback" class="success-copy">{{ inventoryFeedback }}</p>
           <p v-if="inventoryError" class="error-copy">{{ inventoryError }}</p>

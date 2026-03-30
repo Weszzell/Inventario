@@ -83,7 +83,6 @@ const visibleTableHeaders = computed(() => props.tableHeaders);
 const existingDatasetFields = computed(() => props.activeDataset?.fields ?? props.tableHeaders);
 const canSubmitImport = computed(() => Boolean(importFile.value) && Boolean(importPreview.value) && !importPreviewError.value);
 const tableShellClass = computed(() => [] as string[]);
-const importModeLabel = computed(() => (importMode.value === "append" ? "Acrescentar" : "Substituir"));
 const resultSummary = computed(() => {
   if (!totalItems.value) return "Sem registros para a combinacao atual.";
   return `Mostrando ${pageStart.value}-${pageEnd.value} de ${totalItems.value} registro(s).`;
@@ -255,6 +254,10 @@ function goToNextPage() {
 
 function handleImportModeChange(event: Event) {
   importMode.value = ((event.target as HTMLSelectElement).value || "append") as "append" | "replace";
+}
+
+function toggleSortDirection() {
+  sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
 }
 
 function handleSortDirectionChange(event: Event) {
@@ -475,17 +478,11 @@ async function exportCurrentViewToExcel() {
       <p v-else-if="activeDataset && !activeDataset.records.length" class="surface-copy">Nenhum registro encontrado para esta busca.</p>
 
       <template v-else-if="activeDataset">
-        <div class="inventory-ux-summary">
-          <span class="header-chip">{{ totalVisibleColumns }} coluna(s)</span>
-          <span class="header-chip">Importacao em modo {{ importModeLabel }}</span>
-          <span class="header-chip">{{ resultSummary }}</span>
-        </div>
-
-        <div class="import-surface">
-          <div class="column-filters-head">
+        <div class="import-surface compact-import-surface">
+          <div class="column-filters-head compact-import-head">
             <div>
               <p class="eyebrow">Importacao</p>
-              <p class="surface-copy">Envie CSV, XLS ou XLSX para acrescentar ou substituir os registros da base ativa.</p>
+              <p class="surface-copy">CSV, XLS ou XLSX.</p>
             </div>
           </div>
 
@@ -547,20 +544,7 @@ async function exportCurrentViewToExcel() {
               </article>
             </div>
 
-            <div class="preview-table-shell">
-              <table class="preview-table">
-                <thead>
-                  <tr>
-                    <th v-for="field in importPreview.headers" :key="field">{{ formatFieldLabel(field) }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(row, index) in importPreview.sampleRows" :key="index">
-                    <td v-for="field in importPreview.headers" :key="`${index}-${field}`">{{ row[field] || '-' }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <p class="surface-copy compact-import-copy">As primeiras linhas foram reconhecidas e os novos campos serao criados automaticamente quando necessario.</p>
           </div>
         </div>
 
@@ -568,7 +552,16 @@ async function exportCurrentViewToExcel() {
           <div class="data-toolbar-meta">
             <strong>{{ totalItems }}</strong>
             <span>registro(s)</span>
-            <span v-if="totalItems">mostrando {{ pageStart }}-{{ pageEnd }}</span>
+            <span v-if="totalItems">{{ pageStart }}-{{ pageEnd }}</span>
+            <div class="pagination-controls pagination-inline">
+              <button class="secondary-cta" type="button" :disabled="currentPage === 1" @click="goToPreviousPage">
+                Anterior
+              </button>
+              <span>Pagina {{ currentPage }} de {{ totalPages }}</span>
+              <button class="secondary-cta" type="button" :disabled="currentPage === totalPages" @click="goToNextPage">
+                Proxima
+              </button>
+            </div>
           </div>
 
           <div class="data-toolbar-actions">
@@ -589,13 +582,9 @@ async function exportCurrentViewToExcel() {
               </select>
             </label>
 
-            <label class="toolbar-inline-field toolbar-inline-field-compact">
-              <span>Ordem</span>
-              <select :value="sortDirection" @change="handleSortDirectionChange">
-                <option value="asc">Crescente</option>
-                <option value="desc">Decrescente</option>
-              </select>
-            </label>
+            <button class="secondary-cta toolbar-toggle-button" type="button" @click="toggleSortDirection">
+              Ordem {{ sortDirection === 'asc' ? 'Crescente' : 'Decrescente' }}
+            </button>
 
             <label class="toolbar-inline-field toolbar-inline-field-compact">
               <span>Por pagina</span>
@@ -614,15 +603,6 @@ async function exportCurrentViewToExcel() {
               {{ exportPending ? 'Gerando Excel...' : 'Exportar Excel' }}
             </button>
 
-            <div class="pagination-controls">
-              <button class="secondary-cta" type="button" :disabled="currentPage === 1" @click="goToPreviousPage">
-                Anterior
-              </button>
-              <span>Pagina {{ currentPage }} de {{ totalPages }}</span>
-              <button class="secondary-cta" type="button" :disabled="currentPage === totalPages" @click="goToNextPage">
-                Proxima
-              </button>
-            </div>
           </div>
         </div>
 

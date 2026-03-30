@@ -37,29 +37,6 @@ const heroChips = computed(() => [
   sessionUser.value ? "Sessao ativa" : "Sessao inativa",
 ]);
 
-const accessHighlights = computed(() => [
-  {
-    label: "Sessao atual",
-    value: sessionUser.value?.displayName || "Sem sessao",
-    note: sessionUser.value ? `${sessionUser.value.username} | ${sessionUser.value.role}` : "Entre para operar o ambiente",
-  },
-  {
-    label: "Usuarios",
-    value: String(users.value.length || status.value?.stats?.users || 0),
-    note: isAdmin.value ? "Administracao completa disponivel" : "Visao resumida do ambiente",
-  },
-  {
-    label: "Historico",
-    value: String(auditLogs.value.length || 0),
-    note: auditLogs.value.length ? "Eventos recentes carregados" : "Sem eventos carregados nesta sessao",
-  },
-  {
-    label: "Permissao",
-    value: isAdmin.value ? "Administrador" : "Editor",
-    note: isAdmin.value ? "Pode administrar usuarios e backups" : "Acesso operacional restrito",
-  },
-]);
-
 function handleUserFormUpdate(payload: { field: string; value: string }) {
   (userForm.value as Record<string, string>)[payload.field] = payload.value;
 }
@@ -91,9 +68,10 @@ onMounted(bootstrap);
   <main class="page-shell access-page">
     <UiHeroSection
       eyebrow="Acessos"
-      title="Controle de sessao e administracao com leitura mais limpa."
-      description="Esta area concentra o status do ambiente, a sessao ativa, a administracao de usuarios e o historico da nova stack."
+      title="Controle de acessos"
+      description="Sessao, usuarios e administracao direta do ambiente."
       :chips="heroChips"
+      compact
     />
 
     <AuthLoginCard
@@ -109,14 +87,6 @@ onMounted(bootstrap);
     />
 
     <template v-else>
-      <section class="access-highlight-strip">
-        <article v-for="item in accessHighlights" :key="item.label" class="inventory-highlight-card">
-          <p class="metric-label">{{ item.label }}</p>
-          <strong class="inventory-highlight-value">{{ item.value }}</strong>
-          <p class="metric-note">{{ item.note }}</p>
-        </article>
-      </section>
-
       <section class="access-horizontal-layout">
         <div class="access-primary-column">
           <AccessSessionPanel :session-user="sessionUser" />

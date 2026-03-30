@@ -4,12 +4,13 @@ defineProps<{
   title: string;
   description: string;
   chips?: string[];
+  compact?: boolean;
 }>();
 </script>
 
 <template>
   <section class="page-hero">
-    <div class="hero-intro-card">
+    <div class="hero-intro-card" :class="{ compact: compact }">
       <p class="eyebrow">{{ eyebrow }}</p>
       <h2>{{ title }}</h2>
       <p class="hero-copy">{{ description }}</p>

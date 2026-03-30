@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { formatFieldLabel } from "~/utils/field-label";
 
-const activePanel = ref<"record" | "field">("record");
-
 defineProps<{
   activeDatasetName: string;
   activeDataset: { name: string } | null;
@@ -23,24 +21,26 @@ const emit = defineEmits<{
 <template>
   <div class="inventory-workspace-stack">
     <section class="inventory-operation-shell" v-if="activeDataset">
-      <article class="surface-card workspace-card tabbed-workspace-card">
-        <div class="surface-head compact-head compact-surface-head">
+      <article class="surface-card workspace-card operation-card">
+        <div class="surface-head compact-head compact-surface-head operation-head">
           <div>
             <p class="eyebrow">Operacao</p>
             <h3>{{ activeDataset.name }}</h3>
           </div>
-          <div class="workspace-tabs" role="tablist" aria-label="Operacoes da base">
-            <button class="workspace-tab" :class="{ active: activePanel === 'record' }" type="button" @click="activePanel = 'record'">
-              Novo registro
+
+          <form class="operation-inline-form" @submit.prevent="emit('add-field')">
+            <label class="field-block field-block-wide">
+              <span>Novo campo</span>
+              <input :value="newFieldName" type="text" placeholder="Ex: patrimonio, garantia, local" @input="emit('update:newFieldName', ($event.target as HTMLInputElement).value)" />
+            </label>
+            <button class="secondary-cta" type="submit" :disabled="inventorySaving">
+              {{ inventorySaving ? 'Salvando...' : 'Criar campo' }}
             </button>
-            <button class="workspace-tab" :class="{ active: activePanel === 'field' }" type="button" @click="activePanel = 'field'">
-              Estrutura
-            </button>
-          </div>
+          </form>
         </div>
 
-        <div v-if="activePanel === 'record'" class="workspace-panel-body">
-          <p class="surface-copy">Os campos exibidos seguem a estrutura visivel da base ativa.</p>
+        <div class="workspace-panel-body">
+          <p class="surface-copy">Preencha apenas o que precisar para adicionar um novo registro.</p>
 
           <form class="form-grid-compact" @submit.prevent="emit('create-record')">
             <label v-for="field in tableHeaders" :key="`new-${field}`" class="field-block">
@@ -53,20 +53,6 @@ const emit = defineEmits<{
                 {{ inventorySaving ? 'Salvando...' : 'Adicionar registro' }}
               </button>
             </div>
-          </form>
-        </div>
-
-        <div v-else class="workspace-panel-body structure-panel-body">
-          <p class="surface-copy">Crie campos personalizados e mantenha a base preparada para novos controles.</p>
-
-          <form class="structure-inline-form" @submit.prevent="emit('add-field')">
-            <label class="field-block field-block-wide">
-              <span>Nome do campo</span>
-              <input :value="newFieldName" type="text" placeholder="Ex: patrimonio, garantia, local, etiqueta" @input="emit('update:newFieldName', ($event.target as HTMLInputElement).value)" />
-            </label>
-            <button class="secondary-cta" type="submit" :disabled="inventorySaving">
-              {{ inventorySaving ? 'Salvando...' : 'Criar campo' }}
-            </button>
           </form>
         </div>
       </article>

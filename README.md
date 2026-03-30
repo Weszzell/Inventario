@@ -1368,3 +1368,151 @@ Resultado:
 - a base ativa ficou mais direta e com menos blocos auxiliares
 - a operacao diaria passa a depender so da busca principal, ordenacao, paginacao e importacao/exportacao
 - a tela ganha mais foco no que realmente esta sendo usado
+
+
+### 2026-03-30 - Simplificacao do painel do inventario
+
+Etapas concluidas nesta fase:
+
+- remocao do bloco `Panorama das bases` em [inventario.vue](c:\Projeto\pages\inventario.vue)
+- limpeza do CSS associado em [main.css](c:\Projetossets\css\main.css)
+
+Resultado:
+
+- a tela do inventario ficou mais focada em operacao direta
+- o fluxo visual passou a priorizar cadastro, feedback e tabela
+- a pagina ganhou mais respiro sem perder as funcoes principais
+
+
+### 2026-03-30 - Simplificacao visual do inventario
+
+Etapas concluidas nesta fase:
+
+- remocao da faixa de destaques operacionais em [inventario.vue](c:\Projeto\pages\inventario.vue)
+- limpeza do CSS associado em [main.css](c:\Projetossets\css\main.css)
+
+Resultado:
+
+- a tela do inventario ficou ainda mais direta
+- o foco visual passou a ser so operacao, feedback e registros
+- o conteudo auxiliar foi reduzido para evitar distracao
+
+
+### 2026-03-30 - Compactacao do topo do inventario
+
+Etapas concluidas nesta fase:
+
+- compactacao visual do bloco principal em [UiHeroSection.vue](c:\Projeto\components\UiHeroSection.vue)
+- ajuste de titulo e descricao em [inventario.vue](c:\Projeto\pages\inventario.vue)
+- refinamento do CSS associado em [main.css](c:\Projeto\assets\css\main.css)
+
+Resultado:
+
+- o topo do inventario ocupa menos altura
+- a tela entrega contexto rapido sem competir com a tabela
+- o foco visual passa mais cedo para a operacao diaria
+
+
+### 2026-03-30 - Simplificacao do bloco de operacao
+
+Etapas concluidas nesta fase:
+
+- remocao das abas `Novo registro` e `Estrutura` em [InventoryWorkspace.vue](c:\Projeto\components\InventoryWorkspace.vue)
+- integracao do campo `Novo campo` no cabecalho do bloco de operacao
+- refinamento visual do layout em [main.css](c:\Projeto\assets\css\main.css)
+
+Resultado:
+
+- a area de operacao ficou mais curta e mais direta
+- criar campo e criar registro passaram a conviver no mesmo fluxo visual
+- a tela perdeu etapas desnecessarias sem remover funcionalidade
+
+
+### 2026-03-30 - Simplificacao da barra da tabela
+
+Etapas concluidas nesta fase:
+
+- reducao de elementos auxiliares na barra de controles em [InventoryRecordList.vue](c:\Projeto\components\InventoryRecordList.vue)
+- substituicao do seletor de ordem por alternancia direta
+- refinamento visual complementar em [main.css](c:\Projeto\assets\css\main.css)
+
+Resultado:
+
+- a barra da tabela ficou mais direta
+- o operador precisa tomar menos decisoes visuais para ordenar a base
+- a area de controle passou a competir menos com os registros
+
+
+### 2026-03-30 - Simplificacao da area de importacao
+
+Etapas concluidas nesta fase:
+
+- compactacao do bloco de importacao em [InventoryRecordList.vue](c:\Projeto\components\InventoryRecordList.vue)
+- remocao da tabela grande de amostra da planilha
+- refinamento visual complementar em [main.css](c:\Projeto\assets\css\main.css)
+
+Resultado:
+
+- a importacao ficou mais curta e menos pesada visualmente
+- a validacao principal continua visivel sem ocupar tanto espaco
+- a tabela ganhou mais protagonismo na tela
+
+
+### 2026-03-30 - Simplificacao do topo da tabela
+
+Etapas concluidas nesta fase:
+
+- remocao do resumo em chips acima da tabela em [InventoryRecordList.vue](c:\Projeto\components\InventoryRecordList.vue)
+- integracao da paginacao na mesma linha do total de registros
+- refinamento visual complementar em [main.css](c:\Projeto\assets\css\main.css)
+
+Resultado:
+
+- o topo da tabela ficou mais seco e direto
+- a navegacao entre paginas continua visivel sem ocupar uma faixa separada
+- a area de registros ganhou ainda mais protagonismo
+
+
+### 2026-03-30 - Simplificacao visual dos acessos
+
+Etapas concluidas nesta fase:
+
+- remocao da faixa de destaques operacionais em [acessos.vue](c:\Projeto\pages\acessos.vue)
+- compactacao do topo da pagina com [UiHeroSection.vue](c:\Projeto\components\UiHeroSection.vue)
+- limpeza do CSS associado em [main.css](c:\Projeto\assets\css\main.css)
+
+Resultado:
+
+- a area de acessos ficou mais direta
+- o foco visual passou mais cedo para sessao, usuarios e historico
+- a pagina ficou mais coerente com a simplificacao ja feita no inventario
+
+
+### 2026-03-30 - Simplificacao do bloco de backup
+
+Etapas concluidas nesta fase:
+
+- compactacao do painel de backup em [AccessAdminPanel.vue](c:\Projeto\components\AccessAdminPanel.vue)
+- reorganizacao das acoes em linha unica
+- refinamento visual complementar em [main.css](c:\Projeto\assets\css\main.css)
+
+Resultado:
+
+- exportar e restaurar ficaram mais diretos
+- o preview do arquivo selecionado continua visivel, mas com menos peso visual
+- a area administrativa passou a ocupar menos altura
+
+
+### 2026-03-30 - Simplificacao da lista de usuarios
+
+Etapas concluidas nesta fase:
+
+- remocao do resumo em chips em [AccessUsersPanel.vue](c:\Projeto\components\AccessUsersPanel.vue)
+- encurtamento do cabecalho do painel
+- simplificacao dos textos de acao no painel de usuarios
+
+Resultado:
+
+- a lista de usuarios ficou mais objetiva
+- o foco visual passou para busca, status e acoes principais
+- o painel administrativo ganhou mais ritmo de leitura
