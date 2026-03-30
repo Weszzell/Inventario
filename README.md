@@ -1310,3 +1310,17 @@ Etapas concluidas nesta fase:
 - ajuste em [InventoryWorkspace.vue](c:\Projeto\components\InventoryWorkspace.vue), [InventoryRecordAccordionItem.vue](c:\Projeto\components\InventoryRecordAccordionItem.vue) e [InventoryRecordList.vue](c:\Projeto\components\InventoryRecordList.vue)
 - regra especial para `alocadoPara` ser exibido como `Alocado Para`
 - demais campos agora passam a ser exibidos com a primeira letra maiuscula e separacao melhor de palavras em camelCase
+
+### 2026-03-30 - Refino de usabilidade do inventario
+
+Etapas concluidas nesta fase:
+
+- evolucao de [inventario.vue](c:\Projeto\pages\inventario.vue) com faixa-resumo operacional da base ativa
+- inclusao de cards de contexto para `base ativa`, `campos visiveis`, `visualizacao` e `busca atual`
+- refinamento visual em [main.css](c:\Projeto\assets\css\main.css) para leitura horizontal mais clara da operacao
+
+Resultado:
+
+- a tela do inventario passa a mostrar contexto rapido sem depender de abrir a tabela
+- o operador entende mais facilmente qual base esta ativa e em qual modo esta trabalhando
+- o topo ficou mais orientado ao uso diario e a navegacao de operacao

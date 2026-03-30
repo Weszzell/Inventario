@@ -35,16 +35,43 @@ const {
 
 const heroChips = computed(() => {
   const items = [
-    status.value?.database?.connected ? 'Banco conectado' : 'Conexao pendente',
+    status.value?.database?.connected ? "Banco conectado" : "Conexao pendente",
     `${summary.value?.totalRecords ?? status.value?.stats?.records ?? 0} registros`,
   ];
 
   if (summary.value?.generatedAt) {
-    items.push(`Resumo ${new Date(summary.value.generatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`);
+    items.push(`Resumo ${new Date(summary.value.generatedAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`);
   }
 
   return items;
 });
+
+const activeDatasetSummary = computed(() =>
+  datasetCards.value.find((dataset) => dataset.name === activeDatasetName.value) ?? null,
+);
+
+const operationalHighlights = computed(() => [
+  {
+    label: "Base ativa",
+    value: activeDatasetName.value || "Sem base",
+    note: activeDatasetSummary.value ? `${activeDatasetSummary.value.recordCount} registro(s)` : "Selecione uma base para operar",
+  },
+  {
+    label: "Campos visiveis",
+    value: String(tableHeaders.value.length || 0),
+    note: tableHeaders.value.length ? "Estrutura pronta para leitura e cadastro" : "Aguardando carregamento da base",
+  },
+  {
+    label: "Visualizacao",
+    value: activeExpandableConfig.value ? "Expansivel" : "Tabela",
+    note: activeExpandableConfig.value ? "Identificacao principal destacada" : "Edicao direta em formato de grade",
+  },
+  {
+    label: "Busca atual",
+    value: datasetQuery.value ? "Filtrada" : "Completa",
+    note: datasetQuery.value ? datasetQuery.value : "Sem termo de busca aplicado",
+  },
+]);
 
 onMounted(async () => {
   bindInventoryWatchers();
@@ -73,48 +100,58 @@ onMounted(async () => {
       @submit="handleLogin"
     />
 
-    <section v-else class="inventory-layout-flat">
-      <InventoryWorkspace
-        :active-dataset-name="activeDatasetName"
-        :active-dataset="activeDataset"
-        :table-headers="tableHeaders"
-        :new-record-form="newRecordForm"
-        :new-field-name="newFieldName"
-        :inventory-saving="inventorySaving"
-        @update:new-field-name="newFieldName = $event"
-        @update:new-record-field="newRecordForm[$event.field] = $event.value"
-        @create-record="createRecord"
-        @add-field="addField"
-      />
-
-      <section class="inventory-overview-row">
-        <InventoryDatasetOverview :active-dataset-name="activeDatasetName" :dataset-cards="datasetCards" />
+    <template v-else>
+      <section class="inventory-highlight-strip">
+        <article v-for="item in operationalHighlights" :key="item.label" class="inventory-highlight-card">
+          <p class="metric-label">{{ item.label }}</p>
+          <strong class="inventory-highlight-value">{{ item.value }}</strong>
+          <p class="metric-note">{{ item.note }}</p>
+        </article>
       </section>
 
-      <section v-if="inventoryFeedback || inventoryError" class="feedback-banner surface-card horizontal-feedback-card">
-        <p v-if="inventoryFeedback" class="success-copy">{{ inventoryFeedback }}</p>
-        <p v-if="inventoryError" class="error-copy">{{ inventoryError }}</p>
-      </section>
+      <section class="inventory-layout-flat">
+        <InventoryWorkspace
+          :active-dataset-name="activeDatasetName"
+          :active-dataset="activeDataset"
+          :table-headers="tableHeaders"
+          :new-record-form="newRecordForm"
+          :new-field-name="newFieldName"
+          :inventory-saving="inventorySaving"
+          @update:new-field-name="newFieldName = $event"
+          @update:new-record-field="newRecordForm[$event.field] = $event.value"
+          @create-record="createRecord"
+          @add-field="addField"
+        />
 
-      <InventoryRecordList
-        :active-dataset-name="activeDatasetName"
-        :datasets="datasets"
-        :dataset-query="datasetQuery"
-        :dataset-error="datasetError"
-        :datasets-loading="datasetsLoading"
-        :loading="loading"
-        :active-dataset="activeDataset"
-        :active-expandable-config="activeExpandableConfig"
-        :expandable-rows="expandableRows"
-        :table-headers="tableHeaders"
-        :table-rows="tableRows"
-        :inventory-saving="inventorySaving"
-        @update:datasetQuery="datasetQuery = $event"
-        @update:activeDatasetName="activeDatasetName = $event"
-        @update-field="updateField($event.recordId, $event.field, $event.event)"
-        @delete-record="deleteRecord"
-        @import-dataset="importDatasetFile($event.file, $event.mode)"
-      />
-    </section>
+        <section class="inventory-overview-row">
+          <InventoryDatasetOverview :active-dataset-name="activeDatasetName" :dataset-cards="datasetCards" />
+        </section>
+
+        <section v-if="inventoryFeedback || inventoryError" class="feedback-banner surface-card horizontal-feedback-card">
+          <p v-if="inventoryFeedback" class="success-copy">{{ inventoryFeedback }}</p>
+          <p v-if="inventoryError" class="error-copy">{{ inventoryError }}</p>
+        </section>
+
+        <InventoryRecordList
+          :active-dataset-name="activeDatasetName"
+          :datasets="datasets"
+          :dataset-query="datasetQuery"
+          :dataset-error="datasetError"
+          :datasets-loading="datasetsLoading"
+          :loading="loading"
+          :active-dataset="activeDataset"
+          :active-expandable-config="activeExpandableConfig"
+          :expandable-rows="expandableRows"
+          :table-headers="tableHeaders"
+          :table-rows="tableRows"
+          :inventory-saving="inventorySaving"
+          @update:datasetQuery="datasetQuery = $event"
+          @update:activeDatasetName="activeDatasetName = $event"
+          @update-field="updateField($event.recordId, $event.field, $event.event)"
+          @delete-record="deleteRecord"
+          @import-dataset="importDatasetFile($event.file, $event.mode)"
+        />
+      </section>
+    </template>
   </main>
 </template>
