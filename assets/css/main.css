@@ -199,16 +199,17 @@ a {
 
 .access-horizontal-layout {
   display: grid;
-  grid-template-columns: minmax(380px, 0.88fr) minmax(0, 1.72fr);
-  gap: 16px;
+  grid-template-columns: minmax(360px, 0.84fr) minmax(0, 1.76fr);
+  gap: 14px;
   align-items: start;
 }
 
 .access-primary-column,
 .access-secondary-column {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   min-width: 0;
+  align-content: start;
 }
 
 .access-primary-column {
@@ -1131,7 +1132,7 @@ a {
 .access-admin-stack {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 12px;
   align-items: start;
 }
 
@@ -1141,13 +1142,13 @@ a {
 }
 
 .compact-session-surface {
-  gap: 10px;
+  gap: 8px;
 }
 
 .compact-session-card {
   display: grid;
-  gap: 6px;
-  padding: 12px 14px;
+  gap: 4px;
+  padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 16px;
   background: var(--panel-tint);
@@ -1161,6 +1162,11 @@ a {
   flex-wrap: wrap;
 }
 
+.session-inline-card strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
 .access-page .hero-intro-card.compact {
   gap: 6px;
 }
@@ -1171,8 +1177,8 @@ a {
 
 .access-form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 8px;
 }
 
 .inline-field-block {
@@ -1190,8 +1196,9 @@ a {
 
 .stacked-user-card {
   display: grid;
-  gap: 12px;
-  padding: 14px 16px;
+  gap: 10px;
+  padding: 12px 13px;
+  border-radius: 16px;
 }
 
 .access-user-main,
@@ -1204,15 +1211,24 @@ a {
   flex-wrap: wrap;
 }
 
+.access-user-main {
+  align-items: flex-start;
+}
+
 .access-user-actions {
   align-items: end;
   display: grid;
-  grid-template-columns: minmax(140px, 1fr) auto auto;
-  gap: 10px;
+  grid-template-columns: minmax(132px, 1fr) repeat(2, minmax(98px, auto));
+  gap: 8px;
 }
 
 .access-user-actions > .secondary-cta {
-  min-width: 108px;
+  min-width: 98px;
+}
+
+.access-user-actions .secondary-cta,
+.access-user-actions select {
+  min-height: 40px;
 }
 
 .access-user-actions .field-block {
@@ -1221,30 +1237,31 @@ a {
 
 .audit-log-list {
   display: grid;
-  gap: 12px;
-}
-
-.audit-log-card {
-  padding: 16px 18px;
-  border-radius: 18px;
-  border: 1px solid var(--line);
-  background: var(--panel-tint);
-  display: grid;
   gap: 8px;
 }
 
-.compact-audit-log-list {
-  gap: 10px;
-}
-
-.compact-audit-log-card {
+.audit-log-card {
   padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--panel-tint);
+  display: grid;
   gap: 6px;
 }
 
+.compact-audit-log-list {
+  gap: 8px;
+}
+
+.compact-audit-log-card {
+  padding: 10px 12px;
+  gap: 5px;
+}
+
 .compact-audit-log-card .status-tag {
-  min-height: 28px;
-  padding: 4px 10px;
+  min-height: 26px;
+  padding: 3px 9px;
+  font-size: 0.82rem;
 }
 
 .access-users-toolbar,
@@ -1261,31 +1278,56 @@ a {
 
 .access-users-toolbar,
 .audit-toolbar {
-  padding: 12px 14px;
+  padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: rgba(237, 244, 255, 0.45);
+  background: rgba(237, 244, 255, 0.38);
 }
 
 .access-user-list-shell,
 .audit-log-shell {
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.48);
   padding: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(47, 111, 228, 0.35) transparent;
+}
+
+.access-user-list-shell::-webkit-scrollbar,
+.audit-log-shell::-webkit-scrollbar {
+  width: 10px;
+}
+
+.access-user-list-shell::-webkit-scrollbar-thumb,
+.audit-log-shell::-webkit-scrollbar-thumb {
+  background: rgba(47, 111, 228, 0.28);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.access-user-list-shell::-webkit-scrollbar-track,
+.audit-log-shell::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .access-users-surface .surface-head,
 .audit-surface .surface-head {
-  margin-bottom: 2px;
+  margin-bottom: 0;
+}
+
+.access-users-surface .surface-head h3,
+.audit-surface .surface-head h3 {
+  font-size: 1.16rem;
 }
 
 .access-reset-panel {
   display: grid;
-  gap: 10px;
-  padding: 12px;
+  gap: 8px;
+  padding: 10px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.76);
 }
 
@@ -1335,7 +1377,7 @@ a {
 .backup-preview-card {
   display: grid;
   gap: 10px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   border: 1px solid var(--line);
   border-radius: 16px;
   background: rgba(237, 244, 255, 0.45);
@@ -1351,10 +1393,11 @@ a {
 }
 
 .empty-state-copy {
-  padding: 14px 16px;
+  padding: 12px 14px;
   border: 1px dashed var(--line-strong);
-  border-radius: 16px;
-  background: rgba(237, 244, 255, 0.45);
+  border-radius: 14px;
+  background: rgba(237, 244, 255, 0.34);
+  font-size: 0.96rem;
 }
 
 .data-toolbar {
@@ -1369,12 +1412,33 @@ a {
 .access-backup-surface,
 .access-create-user-surface,
 .access-password-surface {
-  gap: 12px;
+  gap: 10px;
 }
 
 .audit-log-card,
 .inventory-table-next tbody tr:hover td {
   background: #f4f8ff;
+}
+
+.access-user-card,
+.audit-log-card {
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.audit-log-topline strong {
+  font-size: 1rem;
+}
+
+.audit-log-card .compact-copy {
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.access-user-card:hover,
+.audit-log-card:hover {
+  border-color: rgba(47, 111, 228, 0.2);
+  box-shadow: 0 8px 20px rgba(28, 63, 125, 0.06);
+  transform: translateY(-1px);
 }
 
 .inventory-table-next tbody tr:hover td:first-child {

@@ -1565,3 +1565,21 @@ Resultado:
 
 ### 2026-03-30 - Refluxo vertical do bloco de backup
 - O bloco de backup em `Acessos` foi reorganizado em pilha, com arquivo em cima e acoes abaixo, para evitar invasao lateral na coluna direita.
+
+### 2026-03-31 - Polimento de rolagem e leitura em acessos
+- A tela de `Acessos` recebeu polimento de rolagem nos blocos laterais, hover suave em usuarios e historico, e pequenos ajustes de alinhamento para deixar a leitura mais estavel.
+
+### 2026-03-31 - Enxugamento visual das toolbars de acessos
+- As toolbars de usuarios e historico foram compactadas, os titulos internos perderam peso visual e os estados vazios ficaram mais discretos para deixar a tela de `Acessos` mais limpa.
+
+### 2026-03-31 - Compactacao estrutural da coluna esquerda de acessos
+- A coluna esquerda de `Acessos` foi reajustada com menos espacamento entre sessao, formularios e backup, deixando a leitura mais continua e a pagina menos fragmentada.
+
+### 2026-03-31 - Refino dos cards de usuarios em acessos
+- Os cards de usuarios em `Acessos` foram ajustados para leitura mais limpa, com cabecalho mais estavel, acoes mais alinhadas e painel de redefinicao de senha mais curto.
+
+### 2026-03-31 - Refino visual do historico em acessos
+- O bloco de historico em `Acessos` foi compactado com cards menores, espacamento mais curto e tags de acao mais leves para melhorar a leitura sequencial.
+
+### 2026-03-31 - Harmonizacao visual dos blocos de acessos
+- Os blocos principais de `Acessos` foram alinhados com o mesmo ritmo de bordas e superfices para deixar sessao, usuarios, historico e backup mais coesos visualmente.
