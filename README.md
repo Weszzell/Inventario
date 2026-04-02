@@ -1583,3 +1583,15 @@ Resultado:
 
 ### 2026-03-31 - Harmonizacao visual dos blocos de acessos
 - Os blocos principais de `Acessos` foram alinhados com o mesmo ritmo de bordas e superfices para deixar sessao, usuarios, historico e backup mais coesos visualmente.
+
+### 2026-03-31 - Polimento de controles do inventario
+- A area de `Inventario` recebeu um polimento visual em importacao, preview e barra da tabela para reduzir peso visual e aproximar o acabamento da tela de `Acessos`.
+
+### 2026-03-31 - Enxugamento da operacao e da base ativa no inventario
+- O bloco de `Operacao` e o cabecalho da `Base ativa` foram compactados com menos espacamento e uma distribuicao mais direta para deixar o fluxo de uso mais objetivo.
+
+### 2026-03-31 - Compactacao da leitura de registros no inventario
+- A tabela e os cards expansivos do `Inventario` foram compactados para reduzir altura visual e melhorar a escaneabilidade dos registros sem alterar o fluxo de edicao.
+
+### 2026-03-31 - Harmonizacao geral do inventario
+- O topo, os chips, os cabecalhos internos e o feedback do `Inventario` foram alinhados para deixar a tela mais coesa visualmente e mais proxima do acabamento de `Acessos`.

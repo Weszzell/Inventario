@@ -153,7 +153,7 @@ a {
   flex-wrap: wrap;
   padding: 16px 18px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.09);
   border: 1px solid rgba(219, 232, 255, 0.14);
 }
 
@@ -194,7 +194,7 @@ a {
 
 .inventory-layout-flat {
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
 .access-horizontal-layout {
@@ -228,6 +228,14 @@ a {
 
 .inventory-page .page-hero {
   grid-template-columns: minmax(0, 1fr);
+}
+
+.inventory-page .hero-intro-card.compact {
+  gap: 6px;
+}
+
+.inventory-page .hero-intro-card.compact .hero-copy {
+  max-width: 720px;
 }
 
 .inventory-page .hero-intro-card,
@@ -318,6 +326,10 @@ a {
   font-size: 1.4rem;
 }
 
+.inventory-page .surface-head h3 {
+  font-size: 1.18rem;
+}
+
 .hero-copy,
 .surface-copy,
 .field-block span,
@@ -351,6 +363,12 @@ a {
   color: var(--brand-strong);
   font-weight: 700;
   border: 1px solid rgba(15, 91, 78, 0.08);
+}
+
+.inventory-page .hero-chip,
+.inventory-page .header-chip {
+  min-height: 30px;
+  padding: 5px 10px;
 }
 
 .header-chip-accent {
@@ -477,21 +495,22 @@ a {
 
 .workspace-panel-body {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .operation-card {
-  gap: 14px;
+  gap: 12px;
 }
 
 .operation-head {
   align-items: end;
+  gap: 14px;
 }
 
 .operation-inline-form {
   display: grid;
-  grid-template-columns: minmax(260px, 360px) auto;
-  gap: 12px;
+  grid-template-columns: minmax(220px, 320px) auto;
+  gap: 10px;
   align-items: end;
 }
 
@@ -579,8 +598,8 @@ a {
 .form-grid-compact,
 .record-fields-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
 }
 
 .stack-form {
@@ -593,29 +612,36 @@ a {
 .record-accordion-footer {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
+}
+
+.feedback-banner {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(237, 244, 255, 0.42);
 }
 
 
 .integrated-data-surface {
-  gap: 14px;
+  gap: 12px;
 }
 
 .integrated-data-head {
   align-items: end;
+  gap: 14px;
 }
 
 .integrated-data-controls {
   display: grid;
-  grid-template-columns: minmax(360px, 1.3fr) minmax(240px, 300px);
-  gap: 12px;
+  grid-template-columns: minmax(320px, 1.3fr) minmax(220px, 280px);
+  gap: 10px;
   align-items: end;
-  min-width: min(100%, 760px);
+  min-width: min(100%, 700px);
 }
 
 .data-surface {
-  gap: 16px;
+  gap: 14px;
 }
 
 .column-filters-surface {
@@ -629,11 +655,11 @@ a {
 
 .import-surface {
   display: grid;
-  gap: 12px;
-  padding: 14px;
+  gap: 10px;
+  padding: 12px;
   border: 1px solid var(--line);
-  border-radius: 18px;
-  background: rgba(237, 244, 255, 0.42);
+  border-radius: 16px;
+  background: rgba(237, 244, 255, 0.38);
 }
 
 .compact-import-surface {
@@ -694,10 +720,10 @@ a {
 
 .import-preview-surface {
   display: grid;
-  gap: 14px;
-  padding: 14px;
+  gap: 12px;
+  padding: 12px;
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.78);
 }
 
@@ -725,10 +751,10 @@ a {
 
 .preview-info-card {
   display: grid;
-  gap: 10px;
-  padding: 12px;
+  gap: 8px;
+  padding: 10px 12px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 14px;
   background: rgba(237, 244, 255, 0.35);
 }
 
@@ -736,12 +762,12 @@ a {
   display: flex;
   align-items: end;
   justify-content: space-between;
-  gap: 14px;
+  gap: 12px;
   flex-wrap: wrap;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border: 1px solid var(--line);
-  border-radius: 18px;
-  background: rgba(237, 244, 255, 0.55);
+  border-radius: 16px;
+  background: rgba(237, 244, 255, 0.45);
 }
 
 .data-toolbar-meta {
@@ -761,7 +787,7 @@ a {
   display: flex;
   align-items: end;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -777,7 +803,7 @@ a {
 
 .toolbar-inline-field span {
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
 }
 
@@ -857,7 +883,7 @@ a {
 .data-table-shell {
   overflow: auto;
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 16px;
   background: #fbfefd;
   max-height: 72vh;
 }
@@ -871,7 +897,7 @@ a {
 
 .inventory-table-next th,
 .inventory-table-next td {
-  padding: 10px 12px;
+  padding: 9px 11px;
   text-align: left;
   border-bottom: 1px solid rgba(24, 56, 51, 0.08);
   vertical-align: top;
@@ -950,12 +976,12 @@ a {
 
 .record-stack {
   display: grid;
-  gap: 14px;
+  gap: 10px;
 }
 
 .record-accordion {
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
   background: #fbfefd;
 }
@@ -965,8 +991,8 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  padding: 14px 16px;
+  gap: 14px;
+  padding: 12px 14px;
   cursor: pointer;
 }
 
@@ -976,8 +1002,8 @@ a {
 
 .record-accordion-title {
   display: block;
-  margin-top: 6px;
-  font-size: 1.08rem;
+  margin-top: 4px;
+  font-size: 1rem;
 }
 
 .record-accordion-action {
@@ -991,8 +1017,8 @@ a {
 
 .record-accordion-body {
   display: grid;
-  gap: 14px;
-  padding: 14px 16px 16px;
+  gap: 12px;
+  padding: 12px 14px 14px;
 }
 
 .success-copy,
